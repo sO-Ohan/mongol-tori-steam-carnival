@@ -50,10 +50,13 @@ body{
 .slide{
   position:absolute;inset:0;padding:52px 68px 76px;
   opacity:0;visibility:hidden;pointer-events:none;transform:scale(1.012);
+}
+.slide.is-active{opacity:1;visibility:visible;pointer-events:auto;transform:none;z-index:2}
+/* transitions switch on only once the first slide is on screen */
+#stage.ready .slide{
   transition:opacity .5s ease, transform .7s cubic-bezier(.2,.7,.3,1), visibility 0s linear .5s;
 }
-.slide.is-active{
-  opacity:1;visibility:visible;pointer-events:auto;transform:none;z-index:2;
+#stage.ready .slide.is-active{
   transition:opacity .5s ease, transform .7s cubic-bezier(.2,.7,.3,1), visibility 0s linear 0s;
 }
 .slide.bleed{padding:0}
@@ -247,7 +250,7 @@ em{font-style:normal;color:var(--amber)}
 <div id="stage">
 
 <!-- ══════════════ 01 · TITLE ══════════════ -->
-<section class="slide bleed" data-topic="BRAC UNIVERSITY · DHAKA · EST. 2015">
+<section class="slide bleed is-active" data-topic="BRAC UNIVERSITY · DHAKA · EST. 2015">
   <div class="bleed-img"><img data-anim="zoom" src="{{IMG_HERO}}" alt="The rover Taurus beside the lander mock-up in the Utah desert"></div>
   <div class="scrim-l"></div><div class="grain"></div>
   <div style="position:absolute;left:68px;top:78px;right:68px;display:flex;flex-direction:column;gap:20px">
@@ -893,5 +896,10 @@ em{font-style:normal;color:var(--amber)}
   var start = parseInt((location.hash || '').replace('#',''), 10);
   if (start >= 1 && start <= total) i = start - 1;
   render();
+
+  // enable cross-fading only after the opening slide has actually been painted
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){ stage.classList.add('ready'); });
+  });
 })();
 </script>
