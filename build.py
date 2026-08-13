@@ -38,7 +38,8 @@ IMAGES = {
 
 # graphics that are already the right size — inlined as-is
 FILES = {
-    "LOGO_MARK":     ("assets/logo-mark.png", "image/png"),
+    "LOGO_FULL":     ("assets/logo-full.png", "image/png"),
+    "LOGO_MARK":     ("assets/logo-emblem.png", "image/png"),
     "ROVER_DIAGRAM": ("assets/rover-diagram.png", "image/png"),
     "ADVISOR":       ("assets/advisor.jpg", "image/jpeg"),
     "P_SATEL":       ("assets/partner-satel.png", "image/png"),

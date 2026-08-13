@@ -47,8 +47,15 @@ body{
 }
 
 /* ============ SLIDE ============ */
-.slide{position:absolute;inset:0;padding:52px 68px 76px;display:none}
-.slide.is-active{display:block}
+.slide{
+  position:absolute;inset:0;padding:52px 68px 76px;
+  opacity:0;visibility:hidden;pointer-events:none;transform:scale(1.012);
+  transition:opacity .5s ease, transform .7s cubic-bezier(.2,.7,.3,1), visibility 0s linear .5s;
+}
+.slide.is-active{
+  opacity:1;visibility:visible;pointer-events:auto;transform:none;z-index:2;
+  transition:opacity .5s ease, transform .7s cubic-bezier(.2,.7,.3,1), visibility 0s linear 0s;
+}
 .slide.bleed{padding:0}
 
 /* entrance choreography */
@@ -58,8 +65,16 @@ body{
 @keyframes fade{from{opacity:0}to{opacity:1}}
 .slide.is-active [data-anim="grow"]{animation:grow .9s cubic-bezier(.2,.7,.3,1) both;animation-delay:calc(var(--d,0)*70ms + 140ms)}
 @keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-.slide.is-active [data-anim="zoom"]{animation:zoom 9s linear both}
-@keyframes zoom{from{transform:scale(1.045)}to{transform:scale(1)}}
+.slide.is-active [data-anim="zoom"]{animation:zoom 14s ease-out both}
+@keyframes zoom{from{transform:scale(1.075)}to{transform:scale(1)}}
+
+/* Photos reveal behind a curtain rather than by clipping the image itself:
+   animating clip-path on a large decoded bitmap makes the raster drop out. */
+.slide.is-active .photo::before{animation:uncover .85s cubic-bezier(.4,.85,.2,1) both;animation-delay:calc(var(--d,0)*70ms + 120ms)}
+@keyframes uncover{from{transform:scaleY(1)}to{transform:scaleY(0)}}
+.slide.is-active .photo img{animation:photoIn .9s cubic-bezier(.2,.7,.25,1) both;animation-delay:calc(var(--d,0)*70ms + 120ms)}
+@keyframes photoIn{from{opacity:0;transform:scale(1.05)}to{opacity:1;transform:scale(1)}}
+
 
 /* ============ TYPE ============ */
 .eyebrow{
@@ -84,7 +99,22 @@ em{font-style:normal;color:var(--amber)}
 .quote{color:var(--ink);border-left:2px solid var(--vermilion);padding-left:14px}
 
 /* ============ SHARED PIECES ============ */
-.rule{height:1px;background:var(--line);border:0;margin:0;transform-origin:left center}
+.rule{
+  height:1px;border:0;margin:0;transform-origin:left center;
+  background:linear-gradient(90deg,var(--vermilion) 0%,var(--amber) 22%,rgba(246,241,236,.16) 60%,rgba(246,241,236,0) 100%);
+}
+/* the big numbers pick up the same warm gradient */
+.kpi .n, .bignum{
+  background:linear-gradient(170deg,var(--ink) 32%,var(--amber) 130%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+/* slow ambient warmth behind the text-only slides */
+.glow{
+  position:absolute;pointer-events:none;z-index:0;border-radius:50%;
+  background:radial-gradient(circle,rgba(230,65,38,.16) 0%,rgba(230,65,38,.05) 45%,transparent 70%);
+  filter:blur(18px);animation:breathe 16s ease-in-out infinite;z-index:-1;
+}
+@keyframes breathe{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.18);opacity:1}}
 .head{display:flex;flex-direction:column;gap:12px}
 .cols{display:grid;gap:44px;height:100%}
 .stack{display:flex;flex-direction:column}
@@ -97,7 +127,7 @@ em{font-style:normal;color:var(--amber)}
 .chip .dot{width:6px;height:6px;border-radius:50%;background:var(--vermilion)}
 
 .kpi{display:flex;flex-direction:column;gap:2px}
-.kpi .n{font-family:var(--f-display);font-weight:700;font-size:60px;line-height:.86;color:var(--ink);font-variant-numeric:tabular-nums}
+.kpi .n{font-family:var(--f-display);font-weight:700;font-size:60px;line-height:.86;font-variant-numeric:tabular-nums}
 .kpi .n .u{font-size:26px;color:var(--amber);margin-left:2px}
 .kpi .l{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
 
@@ -108,7 +138,17 @@ em{font-style:normal;color:var(--amber)}
 .specs .v{font-size:16.5px;line-height:1.4;color:var(--ink-2)}
 
 /* photo frames */
-.photo{position:relative;overflow:hidden;background:#0b0a0a}
+.photo{position:relative;overflow:hidden;background:#0b0a0a;border-radius:2px}
+/* the curtain — collapses upward to reveal the photo, and stays out of the way
+   entirely when animation is switched off */
+.photo::before{
+  content:"";position:absolute;inset:0;z-index:3;pointer-events:none;
+  background:var(--ground);transform:scaleY(0);transform-origin:top;
+}
+.photo::after{
+  content:"";position:absolute;inset:0;pointer-events:none;border-radius:2px;
+  box-shadow:inset 0 0 0 1px rgba(246,241,236,.10), inset 0 -44px 40px -40px rgba(9,8,8,.55);
+}
 .photo img{width:100%;height:100%;object-fit:cover;display:block}
 .photo .cap{
   position:absolute;left:0;bottom:0;right:0;padding:30px 18px 11px;
@@ -196,6 +236,10 @@ em{font-style:normal;color:var(--amber)}
   #rail .live{animation:none}
   .drawline{animation-duration:.01ms}
   .pts{animation-delay:0ms}
+  .slide{transition-duration:.01ms}
+  .slide.is-active .photo img{animation:none}
+  .slide.is-active .photo::before{animation:none}
+  .glow{animation:none}
 }
 </style>
 
@@ -207,11 +251,11 @@ em{font-style:normal;color:var(--amber)}
   <div class="bleed-img"><img data-anim="zoom" src="{{IMG_HERO}}" alt="The rover Taurus beside the lander mock-up in the Utah desert"></div>
   <div class="scrim-l"></div><div class="grain"></div>
   <div style="position:absolute;left:68px;top:78px;right:68px;display:flex;flex-direction:column;gap:20px">
-    <div style="display:flex;align-items:center;gap:16px" data-anim>
-      <img src="{{LOGO_MARK}}" alt="" style="height:62px;width:auto;display:block">
-      <div>
-        <p class="bn" style="font-size:22px;color:var(--amber);margin:0;line-height:1.1">মঙ্গল তরী</p>
-        <p class="tiny" style="margin-top:3px">Born to build</p>
+    <div style="display:flex;align-items:center;gap:22px" data-anim>
+      <img src="{{LOGO_FULL}}" alt="Mongol Tori" style="height:92px;width:auto;display:block">
+      <div style="border-left:1px solid var(--line);padding-left:22px">
+        <p class="bn" style="font-size:24px;color:var(--amber);margin:0;line-height:1.1">মঙ্গল তরী</p>
+        <p class="tiny" style="margin-top:5px">Born to build</p>
       </div>
     </div>
     <h1 data-anim style="--d:1;font-size:100px">BRACU<br>Mongol-Tori</h1>
@@ -269,6 +313,7 @@ em{font-style:normal;color:var(--amber)}
 
 <!-- ══════════════ 03 · WHY ══════════════ -->
 <section class="slide" data-topic="PURPOSE · RESEARCH + COMPETITION">
+  <div class="glow" style="width:760px;height:760px;left:-180px;top:-260px"></div>
   <div class="stack" style="gap:24px;height:100%">
     <div class="head">
       <p class="eyebrow" data-anim>02 <span class="dim">/</span> Why we do it</p>
@@ -302,7 +347,7 @@ em{font-style:normal;color:var(--amber)}
 
 <!-- ══════════════ 04 · THE MISSIONS ══════════════ -->
 <section class="slide bleed" data-topic="URC 2026 · 4 MISSIONS · 30 MIN EACH">
-  <div class="bleed-img"><img src="{{IMG_LANDER}}" alt="The rover working beside the lander mock-up on the Mars Yard"></div>
+  <div class="bleed-img"><img data-anim="zoom" src="{{IMG_LANDER}}" alt="The rover working beside the lander mock-up on the Mars Yard"></div>
   <div class="scrim-b" style="background:linear-gradient(to top,rgba(12,11,11,.99) 0%,rgba(12,11,11,.97) 38%,rgba(12,11,11,.66) 56%,rgba(12,11,11,.30) 78%)"></div>
   <div class="grain"></div>
   <div style="position:absolute;left:68px;top:48px;right:68px;text-shadow:0 2px 26px rgba(8,7,7,.9)">
@@ -333,6 +378,7 @@ em{font-style:normal;color:var(--amber)}
 
 <!-- ══════════════ 05 · RESULTS ══════════════ -->
 <section class="slide" data-topic="RESULTS · URC + IRC · 2018 → 2026">
+  <div class="glow" style="width:760px;height:760px;left:-180px;top:-260px"></div>
   <div class="stack" style="gap:16px;height:100%">
     <div class="head">
       <p class="eyebrow" data-anim>04 <span class="dim">/</span> Where we have finished</p>
@@ -536,7 +582,7 @@ em{font-style:normal;color:var(--amber)}
         Dhaka. They helped because we asked a specific technical question. That is worth knowing if you are starting out.</p>
     </div>
     <div class="stack" style="gap:16px;padding-top:6px;justify-content:center">
-      <div class="photo" data-anim="fade" style="--d:2;height:304px">
+      <div class="photo" data-anim="fade" style="--d:2;height:330px">
         <img src="{{IMG_COMPLETECH}}" alt="Video call between Mongol-Tori engineers and CompleTech's antenna engineer">
         <div class="cap">Working the antenna design with CompleTech, Finland</div>
       </div>
@@ -590,6 +636,7 @@ em{font-style:normal;color:var(--amber)}
 
 <!-- ══════════════ 11 · WE BUILD OUR OWN ══════════════ -->
 <section class="slide" data-topic="IN-HOUSE · KACCHIM CONTROLLER · POWER BOARD">
+  <div class="glow" style="width:760px;height:760px;left:-180px;top:-260px"></div>
   <div class="stack" style="gap:22px;height:100%">
     <div class="head">
       <p class="eyebrow" data-anim>10 <span class="dim">/</span> Breakthrough four — our own boards</p>
@@ -637,9 +684,11 @@ em{font-style:normal;color:var(--amber)}
       <p class="body quote" data-anim style="--d:4;font-size:16.5px;max-width:52ch">The <b>Bangladesh Navy</b> came to our lab to
         see the drone work. Students explained it to them at the table, which is roughly how everything here starts.</p>
     </div>
-    <div class="photo to-rail" data-anim="fade" style="--d:2;margin:-52px -68px -76px 0">
-      <img src="{{IMG_NAVY}}" alt="Bangladesh Navy officers at the BRAC University lab as students demonstrate the drone">
-      <div class="cap">Bangladesh Navy at the BRAC University robotics lab</div>
+    <div class="stack" style="justify-content:center">
+      <div class="photo" data-anim="fade" style="--d:2;height:452px">
+        <img src="{{IMG_NAVY}}" alt="Bangladesh Navy officers at the BRAC University lab as students demonstrate the drone">
+        <div class="cap">Bangladesh Navy at the BRAC University robotics lab</div>
+      </div>
     </div>
   </div>
 </section>
@@ -653,16 +702,16 @@ em{font-style:normal;color:var(--amber)}
     </div>
     <p class="lead" data-anim style="--d:2;font-size:18px;max-width:88ch">For eleven years we have been driving a Mars rover into
       school grounds and letting children hold the controller. Most of us are on this team because someone did that for us.</p>
-    <div style="display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:14px;flex:1">
-      <div class="photo" data-anim="fade" style="--d:3">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;flex:1;align-content:center">
+      <div class="photo" data-anim="fade" style="--d:3;height:256px">
         <img src="{{IMG_SCHOOL}}" alt="A team member explaining the rover to school students in uniform">
         <div class="cap">A school classroom, and a rover on the floor</div>
       </div>
-      <div class="photo" data-anim="fade" style="--d:4">
-        <img src="{{IMG_KID}}" alt="A young girl driving the rover with a hand controller">
+      <div class="photo" data-anim="fade" style="--d:4;height:256px">
+        <img src="{{IMG_KID}}" style="object-position:center 40%" alt="A young girl driving the rover with a hand controller">
         <div class="cap">Her turn to drive</div>
       </div>
-      <div class="photo" data-anim="fade" style="--d:5">
+      <div class="photo" data-anim="fade" style="--d:5;height:256px">
         <img src="{{IMG_CROWD}}" alt="Two rovers demonstrated in a courtyard surrounded by students">
         <div class="cap">Two rovers, one courtyard</div>
       </div>
@@ -676,7 +725,7 @@ em{font-style:normal;color:var(--amber)}
 <!-- ══════════════ 14 · ASTRONAUT ══════════════ -->
 <section class="slide bleed" data-topic="LAB VISIT · A NASA ASTRONAUT">
   <!-- the photo carries its own logo watermarks along the top, so bias the crop downwards -->
-  <div class="bleed-img"><img src="{{IMG_ASTRONAUT}}" style="object-position:center 92%" alt="A NASA astronaut in a blue flight suit listening to a Mongol-Tori student explain the rover in the lab"></div>
+  <div class="bleed-img"><img data-anim="zoom" src="{{IMG_ASTRONAUT}}" style="object-position:center 92%" alt="A NASA astronaut in a blue flight suit listening to a Mongol-Tori student explain the rover in the lab"></div>
   <div class="scrim-b" style="background:linear-gradient(to top,rgba(12,11,11,.98) 0%,rgba(12,11,11,.93) 36%,rgba(12,11,11,.5) 60%,rgba(12,11,11,.10) 84%)"></div>
   <div class="grain"></div>
   <div style="position:absolute;left:68px;right:68px;bottom:104px">
