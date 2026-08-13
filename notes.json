@@ -1,0 +1,82 @@
+[
+  {
+    "h": "Title",
+    "t": "0:00 – 0:25  ·  25s",
+    "b": "<p class='say'>\"Assalamu alaikum. We're BRACU Mongol-Tori. This May we finished seventh in the world at the University Rover Challenge, in the Utah desert — and I want to spend the next eight minutes on <em>how</em>, not on the trophy.\"</p><ul><li>Say the team name in Bangla once — মঙ্গল তরী, Mars Chariot. It lands with this crowd.</li><li>Don't read the slide. Let the photo do the work.</li></ul>"
+  },
+  {
+    "h": "Who we are",
+    "t": "0:25 – 1:00  ·  35s",
+    "b": "<p class='say'>\"We started in 2015. Before the rover, BRAC students built Onnesha, the country's first nanosatellite, and Chondrobot, a lunar excavator. Mongol-Tori is the third thing in that line — and it is still 100% student-run.\"</p><ul><li>Emphasise the handover: seniors graduate every year, juniors inherit the lab. That's the hard part of a student team, not the engineering.</li><li>Name-check Dr. Khalilur Rhaman.</li></ul>"
+  },
+  {
+    "h": "The competition",
+    "t": "1:00 – 1:40  ·  40s",
+    "b": "<p class='say'>\"Four missions, thirty minutes each. The key rule: the operator sits in a tent and cannot see the rover. Every design decision after this slide comes from that one constraint.\"</p><ul><li>116 → 38 → 7th. Say the funnel out loud; the numbers do the bragging so you don't have to.</li><li>If the audience has rover people, they know the missions — go fast here.</li></ul>"
+  },
+  {
+    "h": "The climb",
+    "t": "1:40 – 2:20  ·  40s",
+    "b": "<p class='say'>\"This is our ranking since 2018. I'm showing you the whole line, including 2024, when we came 21st.\"</p><ul><li><strong>Own the dip.</strong> An engineering audience trusts the presenter who shows the bad year.</li><li>Point at 2024: \"Nothing exploded. Everything was just slightly worse than it needed to be. That's what a bad year actually looks like.\"</li><li>Then: \"8th, then 7th — same core people, two years of <em>not</em> restarting the design from scratch.\"</li></ul>"
+  },
+  {
+    "h": "Bangladesh at URC",
+    "t": "2:20 – 2:50  ·  30s",
+    "b": "<p class='say'>\"Three of the world's top eleven rovers were built in Dhaka. UIU came third — the best any Asian team has ever done. MIST came eleventh. Five Bangladeshi teams reached the finals; no country except the US sent more.\"</p><ul><li>This is the slide for the other rover teams in the room. Say the last line slowly and mean it: <strong>we're all competing with Utah, not with each other.</strong></li><li>If UIU or MIST people are present, look at them.</li></ul>"
+  },
+  {
+    "h": "Meet Taurus",
+    "t": "2:50 – 3:20  ·  30s",
+    "b": "<p class='say'>\"This is Taurus. One chassis that has to drill rock, plug a cable into a socket, climb a hill, and then find its own way back with nobody driving.\"</p><ul><li>Fast slide — it's a table of contents for the next five.</li><li>Flag the last line: three radio bands live at once. That's the thread you'll pull on shortly.</li></ul>"
+  },
+  {
+    "h": "Structure & mobility",
+    "t": "3:20 – 3:50  ·  30s",
+    "b": "<p class='say'>\"Four-wheel rocker-bogie, steel skeleton, aluminium electronics bay, TPU grips we print ourselves. All of it FEA'd at peak load before anything was cut.\"</p><ul><li>The tapered roller bearing detail is for the mechanical engineers: radial <em>and</em> axial load when turning on a slope.</li><li>End on the red number: <strong>we failed the rain test at five minutes.</strong> Say it plainly. That single admission buys you the room's trust for the rest of the talk.</li></ul>"
+  },
+  {
+    "h": "The arm",
+    "t": "3:50 – 4:20  ·  30s",
+    "b": "<p class='say'>\"Seven degrees of freedom, and one cheat: the whole arm rides on a linear rail. Reach goes up, inertia doesn't.\"</p><ul><li>Worm gear on the base — can't be back-driven, holds position with the power off. Engineers nod at this one.</li><li>Close with the framing: \"Servicing tasks are a millimetre problem solved from a kilometre away.\" That hands you the comms slide.</li></ul>"
+  },
+  {
+    "h": "The link (comms)",
+    "t": "4:20 – 5:10  ·  50s",
+    "b": "<p class='say'>\"Here's the part I actually want to talk about. Three bands, because one band is a single point of failure.\"</p><ul><li><strong>433 MHz SATEL SATELLINE-EASy</strong> — command and telemetry, 25 kHz narrowband, verified past 1.2 km. Narrow channel, low data rate, gets through terrain.</li><li><strong>5.8 GHz Ubiquiti Rocket AC</strong>, 2×2 MIMO — primary data and vision, 40 MHz channel, over 900 m non-line-of-sight at −76 dBm.</li><li><strong>2.4 GHz Bullet AC</strong> — standby failover on the same mast.</li><li>Punchline: \"We tested the failover by switching off the primary link mid-run. The rover kept driving.\"</li><li>Slow down here. This is your most technical slide and the reason you were invited.</li></ul>"
+  },
+  {
+    "h": "The antennas / CompleTech",
+    "t": "5:10 – 5:50  ·  40s",
+    "b": "<p class='say'>\"A radio's datasheet range was measured somewhere that isn't Bangladesh. So we sat down with the engineers at CompleTech — the Finnish antenna house behind ComAnt — and did it properly.\"</p><ul><li>Walk the four steps: simulate our own ground → design antennas to those simulations → 2×2 MIMO omni on the rover, sector at base, Miniflex for 433 → measure it in the field.</li><li>SATEL gave the radios. SBG Systems gave the inertial unit. CompleTech tuned the antennas.</li><li><strong>The takeaway for this room:</strong> every one of those relationships started with a student sending a technical email. Say \"Ask.\" and pause.</li></ul>"
+  },
+  {
+    "h": "Autonomy",
+    "t": "5:50 – 6:35  ·  45s",
+    "b": "<p class='say'>\"Four sensors that lie in different directions. GNSS drifts, wheels slip, the IMU integrates its own error, stereo depth hates featureless sand. So none of them gets to be right on its own.\"</p><ul><li>Left to right: SBG inertial + GNSS (weighted by HDOP) + ZED 2i stereo + ArUco markers → EKF → AMCL seeded by a 360° sweep, then NDT scan-matching → Nav2 with a DWA local planner.</li><li>The one number: every validated ArUco detection resets accumulated dead-reckoning drift to centimetre level.</li><li>All onboard on a Jetson Orin Nano, in ROS 2, validated in a Unity sim before it touches hardware.</li></ul>"
+  },
+  {
+    "h": "Power & safety",
+    "t": "6:35 – 7:05  ·  30s",
+    "b": "<p class='say'>\"Our power distribution board is a backplane with one hot-swappable card per rail. GaN FETs, 95% efficiency, eFuse on every rail, live current telemetry to the base station.\"</p><ul><li>Hot-swap matters in the pits: \"a rail dies, you pull the card and push in a spare, at night, with a head torch.\"</li><li>Two kill switches, deliberately identical circuits, so one spare part fixes either.</li><li>Land the closing line: buying a PDB is faster; building one is why we can debug it at 2 a.m.</li></ul>"
+  },
+  {
+    "h": "Science payload",
+    "t": "7:05 – 7:30  ·  25s",
+    "b": "<p class='say'>\"The science mission is looking for signs of life — with an auger, a load cell and a pH probe.\"</p><ul><li>Acquire → contain → measure → assay. Four beats, one sentence each. Don't linger.</li><li>Mention Kacchim by name: our own control board runs the actuators for both the science payload and the rest of the rover. One board to learn, one board to fix.</li></ul>"
+  },
+  {
+    "h": "Debrief",
+    "t": "7:30 – 8:05  ·  35s",
+    "b": "<p class='say'>\"If you're starting a team today, here's what eight years cost us to learn.\"</p><ul><li>Read the four headlines only — the sub-text is for the photo people take of the slide.</li><li>Number three is the one to sell in this room: <strong>industry will pick up the phone.</strong></li><li>Number four saves teams their season: half the teams that never reach Utah are eliminated on paper.</li></ul>"
+  },
+  {
+    "h": "Partners",
+    "t": "8:05 – 8:25  ·  20s",
+    "b": "<p class='say'>\"None of this happens on a student budget. Twenty-three companies put something real behind this rover.\"</p><ul><li>Don't read the logos. Name three that gave engineering, not just money: CompleTech, SATEL, SBG Systems.</li><li>If a potential sponsor is in the room, this is the moment to look up and say you're always open to another one.</li></ul>"
+  },
+  {
+    "h": "Close",
+    "t": "8:25 – 8:40  ·  15s",
+    "b": "<p class='say'>\"Mongol Tori means Mars Chariot. Come find us after this — ask us anything: link budgets, gear ratios, what we broke, what it cost. We'd rather Bangladesh had ten good rover teams than one. Thank you.\"</p><ul><li>Stop talking. Take questions.</li><li>Likely questions: total cost / how do you get sponsors / how do you handle graduation turnover / why 433 MHz over LoRa / why not RTK GNSS.</li></ul>"
+  }
+]
