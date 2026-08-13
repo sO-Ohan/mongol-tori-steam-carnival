@@ -1,11 +1,17 @@
 # BRACU Mongol-Tori — National STEAM Carnival deck
 
+**Live: https://so-ohan.github.io/mongol-tori-steam-carnival/**
+
 A self-contained HTML slide deck. Everything (fonts, photos, sponsor wall) is inlined,
-so `deck.html` works offline from a USB stick with no network and no dependencies.
+so it works offline from a USB stick with no network and no dependencies.
 
 ## Presenting
 
-Open `deck.html` in any browser, press **F**.
+Open the live link — or `index.html` from disk — in any browser, and press **F**.
+
+Take the offline copy to the venue regardless. The page is ~2.7 MB over the wire, which
+is a few seconds on a bad conference connection and nothing at all once it is cached, but
+a laptop with the file on it cannot be let down by the venue wifi.
 
 | Key | Does |
 | --- | --- |
@@ -27,26 +33,31 @@ your laptop and on the venue projector. Nothing reflows.
 
 | File | What it is |
 | --- | --- |
-| `deck.html` | **The deliverable.** Built artefact — do not edit by hand. |
-| `deck.src.html` | Source template with `{{TOKEN}}` placeholders. |
+| `index.html` | **The deliverable.** Complete document — what GitHub Pages serves. Built; do not edit by hand. |
+| `deck.html` | Same deck as a body-only fragment, for publishing as a Claude Artifact. Also built. |
+| `deck.src.html` | Source template with `{{TOKEN}}` placeholders. **Edit this one.** |
 | `notes.json` | Speaker notes + per-slide timings. Feeds both the in-deck panel and `SCRIPT.md`. |
 | `SCRIPT.md` | Printable speaker script, 8 min 40 s target. |
-| `build.py` | Inlines fonts, photos and the sponsor SVG into `deck.html`. |
+| `build.py` | Inlines fonts, photos and the sponsor SVG into both outputs. |
+| `assets/` | Font faces as data URIs, and the sponsor-wall SVG. |
 | `images/` | Original URC 2026 photos. |
+| `build/` | Optimised JPEGs, cached between builds. Not committed. |
 
-## Rebuilding
+## Rebuilding and redeploying
 
 ```
 python3 build.py
+git commit -am "update deck" && git push
 ```
 
-Photos are read from a scratch directory of optimised JPEGs (1280 px, q66). To swap a
-photo, drop the new file in `images/`, point the matching entry in `build.py`'s `IMAGES`
-map at it, re-run the optimiser step, then rebuild.
+GitHub Pages redeploys on push, usually within a minute. Needs ImageMagick for the photo
+optimisation step (1280 px, q66), which is cached in `build/` and skipped when nothing
+changed.
 
-Sponsor wall comes from `~/Downloads/sponsors svg.svg`. `build.py` crops its export
-margin via a `viewBox` override — if you re-export the SVG at a different size, update
-that crop.
+To swap a photo, drop the new file in `images/` and point the matching entry in
+`build.py`'s `IMAGES` map at it. The sponsor wall is `assets/sponsors.svg`; `build.py`
+crops its export margin with a `viewBox` override, so update that crop if you re-export
+the SVG at a different size.
 
 ## Sources for every number on the slides
 
