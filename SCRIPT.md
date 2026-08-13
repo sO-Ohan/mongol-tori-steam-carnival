@@ -34,7 +34,7 @@ Press **N** in the deck to read these on your laptop; **T** starts the mission c
 
 > "Four missions, thirty minutes each. The rule that shapes everything: the driver sits in a tent and cannot see the rover."
 
-  - Science, delivery, servicing, autonomy — one line each, keep it moving.
+  - Science, delivery, maintenance, autonomy — one line each, keep it moving. (URC calls the third one the Equipment Servicing Mission; the task itself is maintenance on the lander.)
   - 116 teams → 38 finalists → 7th. Say the funnel out loud.
   - Rover people in the room already know this. Read the room and speed up if they do.
 
