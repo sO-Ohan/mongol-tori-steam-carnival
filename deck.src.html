@@ -17,8 +17,11 @@
   --vermilion-lo:rgba(230,65,38,.16);
   --amber:#FC9D2D;
   --amber-lo:rgba(252,157,45,.14);
-  --teal:#5C9B9C;
+  --teal:#2FA6A8;
   --teal-deep:#2B4849;
+  /* chart series — validated against this surface for colour-vision safety */
+  --series-urc:#D07E17;
+  --series-irc:#2FA6A8;
 
   --f-display:"Barlow Condensed",-apple-system,"Arial Narrow",sans-serif;
   --f-body:"Barlow",-apple-system,Segoe UI,sans-serif;
@@ -44,10 +47,7 @@ body{
 }
 
 /* ============ SLIDE ============ */
-.slide{
-  position:absolute;inset:0;padding:52px 68px 76px;
-  display:none;
-}
+.slide{position:absolute;inset:0;padding:52px 68px 76px;display:none}
 .slide.is-active{display:block}
 .slide.bleed{padding:0}
 
@@ -56,8 +56,6 @@ body{
 @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 .slide.is-active [data-anim="fade"]{animation-name:fade}
 @keyframes fade{from{opacity:0}to{opacity:1}}
-.slide.is-active [data-anim="wipe"]{animation:wipe .8s cubic-bezier(.2,.7,.3,1) both;animation-delay:calc(var(--d,0)*70ms + 120ms)}
-@keyframes wipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
 .slide.is-active [data-anim="grow"]{animation:grow .9s cubic-bezier(.2,.7,.3,1) both;animation-delay:calc(var(--d,0)*70ms + 140ms)}
 @keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 .slide.is-active [data-anim="zoom"]{animation:zoom 9s linear both}
@@ -69,24 +67,21 @@ body{
   text-transform:uppercase;color:var(--amber);margin:0;
 }
 .eyebrow .dim{color:var(--ink-3)}
-h1{
-  font-family:var(--f-display);font-weight:700;text-transform:uppercase;
-  font-size:86px;line-height:.9;letter-spacing:-.01em;margin:0;text-wrap:balance;
-}
-h2{
-  font-family:var(--f-display);font-weight:700;text-transform:uppercase;
-  font-size:52px;line-height:.96;letter-spacing:-.005em;margin:0;text-wrap:balance;
-}
-h3{
-  font-family:var(--f-display);font-weight:600;text-transform:uppercase;
-  font-size:24px;line-height:1.05;letter-spacing:.02em;margin:0;
-}
+h1{font-family:var(--f-display);font-weight:700;text-transform:uppercase;
+   font-size:86px;line-height:.9;letter-spacing:-.01em;margin:0;text-wrap:balance}
+h2{font-family:var(--f-display);font-weight:700;text-transform:uppercase;
+   font-size:52px;line-height:.96;letter-spacing:-.005em;margin:0;text-wrap:balance}
+h3{font-family:var(--f-display);font-weight:600;text-transform:uppercase;
+   font-size:24px;line-height:1.05;letter-spacing:.02em;margin:0}
 .lead{font-size:21px;line-height:1.45;color:var(--ink-2);margin:0;max-width:58ch}
 .body{font-size:17px;line-height:1.5;color:var(--ink-2);margin:0;max-width:62ch}
 .tiny{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin:0}
+.note{font-size:14px;line-height:1.45;color:var(--ink-3);margin:0}
+.note b{color:var(--ink)}
 b,strong{color:var(--ink);font-weight:600}
 em{font-style:normal;color:var(--amber)}
 .bn{font-family:var(--f-bn);font-weight:600}
+.quote{color:var(--ink);border-left:2px solid var(--vermilion);padding-left:14px}
 
 /* ============ SHARED PIECES ============ */
 .rule{height:1px;background:var(--line);border:0;margin:0;transform-origin:left center}
@@ -106,7 +101,6 @@ em{font-style:normal;color:var(--amber)}
 .kpi .n .u{font-size:26px;color:var(--amber);margin-left:2px}
 .kpi .l{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
 
-/* spec rows */
 .specs{display:flex;flex-direction:column;gap:0;margin:0;padding:0;list-style:none}
 .specs li{display:grid;grid-template-columns:150px 1fr;gap:20px;padding:11px 0;border-top:1px solid var(--line-soft);align-items:baseline}
 .specs li:last-child{border-bottom:1px solid var(--line-soft)}
@@ -117,21 +111,22 @@ em{font-style:normal;color:var(--amber)}
 .photo{position:relative;overflow:hidden;background:#0b0a0a}
 .photo img{width:100%;height:100%;object-fit:cover;display:block}
 .photo .cap{
-  position:absolute;left:0;bottom:0;right:0;padding:30px 20px 12px;
+  position:absolute;left:0;bottom:0;right:0;padding:30px 18px 11px;
   background:linear-gradient(to top,rgba(9,8,8,.94),rgba(9,8,8,0));
   font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);
 }
-/* photos that bleed past the telemetry rail keep their caption above it */
 .photo.to-rail .cap{padding-bottom:58px}
-/* readable small print — used where uppercase mono would be too dense */
-.note{font-size:14px;line-height:1.45;color:var(--ink-3);margin:0}
-.note b{color:var(--ink)}
 .bleed-img{position:absolute;inset:0}
 .bleed-img img{width:100%;height:100%;object-fit:cover;display:block}
 .scrim-l{position:absolute;inset:0;background:linear-gradient(100deg,rgba(12,11,11,.96) 0%,rgba(12,11,11,.88) 34%,rgba(12,11,11,.42) 62%,rgba(12,11,11,.25) 100%)}
-.scrim-b{position:absolute;inset:0;background:linear-gradient(to top,rgba(12,11,11,.95) 0%,rgba(12,11,11,.5) 38%,rgba(12,11,11,.12) 72%)}
+.scrim-b{position:absolute;inset:0;background:linear-gradient(to top,rgba(12,11,11,.97) 0%,rgba(12,11,11,.9) 32%,rgba(12,11,11,.5) 54%,rgba(12,11,11,.1) 80%)}
 .grain{position:absolute;inset:0;opacity:.35;mix-blend-mode:overlay;pointer-events:none;
   background-image:radial-gradient(rgba(255,255,255,.08) .5px,transparent .5px);background-size:3px 3px}
+
+/* partner logo lockup */
+.plogo{height:32px;width:auto;display:block;opacity:.95}
+.plogo.sm{height:21px}
+.plogos{display:flex;align-items:center;gap:26px;flex-wrap:wrap}
 
 /* ============ TELEMETRY RAIL ============ */
 #rail{
@@ -151,7 +146,6 @@ em{font-style:normal;color:var(--amber)}
 #met{color:var(--amber);font-variant-numeric:tabular-nums}
 #counter{color:var(--ink-2);font-variant-numeric:tabular-nums}
 
-/* progress ticks */
 #ticks{position:absolute;left:0;right:0;bottom:44px;height:2px;display:flex;gap:2px;padding:0 68px;z-index:5}
 #ticks button{flex:1;height:2px;border:0;padding:0;background:var(--line);cursor:pointer;transition:background .25s}
 #ticks button:hover{background:var(--ink-3)}
@@ -162,8 +156,7 @@ em{font-style:normal;color:var(--amber)}
 /* ============ NOTES PANEL ============ */
 #notes{
   position:fixed;left:0;right:0;bottom:0;max-height:46vh;overflow:auto;z-index:40;
-  background:#0C0B0B;border-top:1px solid var(--vermilion);
-  padding:18px 26px 22px;display:none;
+  background:#0C0B0B;border-top:1px solid var(--vermilion);padding:18px 26px 22px;display:none;
 }
 #notes.open{display:block}
 #notes .nhead{display:flex;align-items:baseline;gap:16px;margin-bottom:10px}
@@ -178,15 +171,31 @@ em{font-style:normal;color:var(--amber)}
 #help{
   position:fixed;right:14px;top:12px;z-index:40;
   font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);
-  background:rgba(12,11,11,.82);border:1px solid var(--line-soft);border-radius:2px;padding:7px 10px;
-  transition:opacity .4s;
+  background:rgba(12,11,11,.82);border:1px solid var(--line-soft);border-radius:2px;padding:7px 10px;transition:opacity .4s;
 }
 #help.hide{opacity:0}
 #help kbd{font:inherit;color:var(--amber)}
 
+/* slide-specific components */
+.pillar{border-top:2px solid var(--vermilion);padding-top:14px;display:flex;flex-direction:column;gap:9px}
+.pillar .pn{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber)}
+.fusebox{border:1px solid var(--line);border-left:2px solid var(--teal);background:var(--panel);padding:9px 13px;border-radius:2px}
+.fusebox .fk{display:block;font-family:var(--f-mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
+.fusebox .fv{display:block;font-size:13.5px;color:var(--ink-3);margin-top:2px;line-height:1.3}
+.stagebox{border:1px solid var(--line);background:var(--panel-2);border-radius:2px;padding:15px;height:100%;display:flex;flex-direction:column;gap:7px}
+.stagebox .sk{font-family:var(--f-display);font-weight:700;text-transform:uppercase;font-size:23px;color:var(--amber);line-height:1}
+.stagebox .sv{font-size:14.5px;line-height:1.42;color:var(--ink-2);margin:0}
+.arrow{display:flex;align-items:center;justify-content:center;color:var(--vermilion);font-size:22px}
+.drawline{animation:draw 1.4s cubic-bezier(.3,.7,.3,1) .3s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.pts{animation:fade .6s ease 1.35s both}
+.card{border:1px solid var(--line);background:var(--panel);border-radius:2px;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+
 @media (prefers-reduced-motion:reduce){
   .slide.is-active [data-anim]{animation-duration:.01ms!important;animation-delay:0ms!important}
   #rail .live{animation:none}
+  .drawline{animation-duration:.01ms}
+  .pts{animation-delay:0ms}
 }
 </style>
 
@@ -194,137 +203,207 @@ em{font-style:normal;color:var(--amber)}
 <div id="stage">
 
 <!-- ══════════════ 01 · TITLE ══════════════ -->
-<section class="slide bleed" data-topic="MDRS · UTAH · 38.406°N 110.792°W">
-  <div class="bleed-img"><img data-anim="zoom" src="{{IMG_HERO}}" alt="Rover Taurus parked beside the URC lander mock-up in the Utah desert"></div>
+<section class="slide bleed" data-topic="BRAC UNIVERSITY · DHAKA · EST. 2015">
+  <div class="bleed-img"><img data-anim="zoom" src="{{IMG_HERO}}" alt="The rover Taurus beside the lander mock-up in the Utah desert"></div>
   <div class="scrim-l"></div><div class="grain"></div>
-  <div style="position:absolute;left:68px;top:96px;right:68px;display:flex;flex-direction:column;gap:22px">
-    <p class="eyebrow" data-anim style="--d:0">National STEAM Carnival <span class="dim">/</span> 2026 <span class="dim">/</span> Rover Pitch</p>
-    <div data-anim style="--d:1">
-      <p class="bn" style="font-size:26px;color:var(--amber);margin:0 0 6px;line-height:1">মঙ্গল তরী</p>
-      <h1 style="font-size:104px">BRACU<br>Mongol-Tori</h1>
+  <div style="position:absolute;left:68px;top:78px;right:68px;display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;align-items:center;gap:16px" data-anim>
+      <img src="{{LOGO_MARK}}" alt="" style="height:62px;width:auto;display:block">
+      <div>
+        <p class="bn" style="font-size:22px;color:var(--amber);margin:0;line-height:1.1">মঙ্গল তরী</p>
+        <p class="tiny" style="margin-top:3px">Born to build</p>
+      </div>
     </div>
-    <hr class="rule" data-anim="grow" style="--d:2;width:420px">
-    <p class="lead" data-anim style="--d:3;max-width:50ch">Bangladesh's first Mars rover team. Eleven years of building machines
-      for a planet none of us will ever visit — and every one of them tested in a field outside Dhaka first.</p>
-    <div style="display:flex;gap:12px;margin-top:6px">
+    <h1 data-anim style="--d:1;font-size:100px">BRACU<br>Mongol-Tori</h1>
+    <hr class="rule" data-anim="grow" style="--d:2;width:430px">
+    <p data-anim style="--d:3;font-size:27px;line-height:1.32;color:var(--ink);max-width:31ch;margin:0">
+      Eleven years of building Mars rovers. Every year we take the old one apart and build it better.</p>
+    <div style="display:flex;gap:12px;margin-top:8px">
       <span class="chip" data-anim style="--d:4"><span class="dot"></span>7th in the world · URC 2026</span>
-      <span class="chip" data-anim style="--d:5">Rover: <b style="color:var(--ink);letter-spacing:.06em">TAURUS</b></span>
+      <span class="chip" data-anim style="--d:5">This year's rover: <b style="color:var(--ink);letter-spacing:.06em">&nbsp;TAURUS</b></span>
     </div>
   </div>
 </section>
 
 <!-- ══════════════ 02 · WHO WE ARE ══════════════ -->
-<section class="slide" data-topic="TEAM · BRAC UNIVERSITY · EST. 2015">
+<section class="slide" data-topic="TEAM · SIX SUBSYSTEMS · ALL STUDENTS">
   <div class="cols" style="grid-template-columns:1fr 470px">
-    <div class="stack" style="gap:26px;padding-top:8px">
+    <div class="stack" style="gap:24px;padding-top:6px;justify-content:center">
       <div class="head">
-        <p class="eyebrow" data-anim style="--d:0">01 <span class="dim">/</span> Who we are</p>
-        <h2 data-anim style="--d:1">A student team<br>that never stopped<br>shipping hardware</h2>
+        <p class="eyebrow" data-anim>01 <span class="dim">/</span> Who we are</p>
+        <h2 data-anim style="--d:1">A student team at<br>BRAC University</h2>
       </div>
       <hr class="rule" data-anim="grow" style="--d:2">
-      <p class="body" data-anim style="--d:3">In 2015 a handful of BRAC University students decided Bangladesh should build a
-        Mars rover. It followed <b>BRAC Onnesha</b>, the country's first nanosatellite, and <b>Chondrobot</b>, its lunar
-        excavator. Eleven years later the team is still entirely student-run — juniors inherit the lab, the mistakes and
-        the deadlines from the seniors who leave.</p>
-      <ul class="specs" data-anim style="--d:4">
-        <li><span class="k">Subsystems</span><span class="v">Mechanical · Electronics · Controls · Autonomy · Communications · Science</span></li>
-        <li><span class="k">Faculty lead</span><span class="v">Dr. Md. Khalilur Rhaman — Professor, CSE; founder of the BRAC Robotics Lab</span></li>
-        <li><span class="k">Beyond the lab</span><span class="v">Robotics workshops and STEM outreach across Bangladesh</span></li>
-      </ul>
+      <p class="body" data-anim style="--d:3;font-size:17.5px">Mongol Tori started in 2015. We design and build Mars rovers — machines
+        that drive over rough ground, pick things up, test soil, and find their own way to a point on a map.</p>
+      <p class="body" data-anim style="--d:4;font-size:17.5px">Everyone on the team is a student. Seniors graduate every year, so a
+        big part of the work is teaching the next batch everything we learned before we leave.</p>
+      <div data-anim style="--d:5">
+        <p class="tiny" style="margin-bottom:10px">Six subsystems</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <span class="chip" style="font-size:11px;padding:6px 11px 5px">Mechanical</span>
+          <span class="chip" style="font-size:11px;padding:6px 11px 5px">Electronics</span>
+          <span class="chip" style="font-size:11px;padding:6px 11px 5px">Controls</span>
+          <span class="chip" style="font-size:11px;padding:6px 11px 5px">Autonomous</span>
+          <span class="chip" style="font-size:11px;padding:6px 11px 5px">Astrobio</span>
+          <span class="chip" style="font-size:11px;padding:6px 11px 5px">Network &amp; Vision</span>
+        </div>
+      </div>
     </div>
-    <div class="photo to-rail" data-anim="fade" style="--d:2;margin:-52px -68px -76px 0">
-      <img src="{{IMG_TEAM}}" alt="The Mongol-Tori team holding the Bangladesh flag at the Mars Desert Research Station sign">
-      <div class="cap">Mars Desert Research Station · Hanksville, Utah · May 2026</div>
+    <div class="stack" style="gap:18px;padding-top:6px;justify-content:center">
+      <div class="photo" data-anim="fade" style="--d:2;height:352px">
+        <img src="{{IMG_TEAM}}" alt="The Mongol-Tori team with the Bangladesh flag at the Mars Desert Research Station">
+        <div class="cap">Mars Desert Research Station · Utah · May 2026</div>
+      </div>
+      <div class="card" data-anim style="--d:4;flex-direction:row;gap:16px;align-items:center">
+        <img src="{{ADVISOR}}" alt="Dr. Md. Khalilur Rhaman" style="width:74px;height:74px;border-radius:2px;object-fit:cover;flex:none">
+        <div>
+          <p class="tiny" style="color:var(--amber)">Faculty advisor</p>
+          <p style="font-size:19px;color:var(--ink);margin:4px 0 3px;line-height:1.15">Dr. Md. Khalilur Rhaman</p>
+          <p class="note" style="font-size:13px">Professor of CSE. He also led BRAC Onnesha, Bangladesh's first nanosatellite.</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════ 03 · THE CHALLENGE ══════════════ -->
+<!-- ══════════════ 03 · WHY ══════════════ -->
+<section class="slide" data-topic="PURPOSE · RESEARCH + COMPETITION">
+  <div class="stack" style="gap:24px;height:100%">
+    <div class="head">
+      <p class="eyebrow" data-anim>02 <span class="dim">/</span> Why we do it</p>
+      <h2 data-anim style="--d:1">We are two things at once</h2>
+    </div>
+    <hr class="rule" data-anim="grow" style="--d:2">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:56px;flex:1;align-content:center">
+      <div class="stack" data-anim style="--d:3;gap:14px">
+        <p class="tiny" style="color:var(--amber)">Entity one</p>
+        <h3 style="font-size:44px;color:var(--ink)">A research group</h3>
+        <p class="body" style="font-size:18px">We work on self-navigation, mapping and localisation — the problem of a machine
+          knowing where it is without anyone telling it. The same work goes into drones and into ground robots that can be
+          useful here, not only on Mars.</p>
+        <p class="body" style="font-size:18px">Our aim is to design things at industry standard, in Bangladesh, with parts we
+          can actually get.</p>
+      </div>
+      <div class="stack" data-anim style="--d:4;gap:14px">
+        <p class="tiny" style="color:var(--amber)">Entity two</p>
+        <h3 style="font-size:44px;color:var(--ink)">A competition team</h3>
+        <p class="body" style="font-size:18px">Competitions give us the one thing a university project usually lacks: a fixed
+          date, a written specification, and judges who do not care how hard it was.</p>
+        <p class="body" style="font-size:18px">If the rover does not work on the day, we score zero. That pressure is what
+          turns a design on a screen into hardware that survives a desert.</p>
+      </div>
+    </div>
+    <p class="body" data-anim style="--d:5;max-width:none;border-top:1px solid var(--line);padding-top:16px;font-size:16px">
+      And one more thing we take seriously: being a place where the next group of students can learn this. Most of us joined
+      because a senior showed us a rover once.</p>
+  </div>
+</section>
+
+<!-- ══════════════ 04 · THE MISSIONS ══════════════ -->
 <section class="slide bleed" data-topic="URC 2026 · 4 MISSIONS · 30 MIN EACH">
-  <div class="bleed-img"><img src="{{IMG_LANDER}}" alt="Rover working beside the lander mock-up on the Mars Yard"></div>
+  <div class="bleed-img"><img src="{{IMG_LANDER}}" alt="The rover working beside the lander mock-up on the Mars Yard"></div>
   <div class="scrim-b" style="background:linear-gradient(to top,rgba(12,11,11,.99) 0%,rgba(12,11,11,.97) 38%,rgba(12,11,11,.66) 56%,rgba(12,11,11,.30) 78%)"></div>
   <div class="grain"></div>
   <div style="position:absolute;left:68px;top:48px;right:68px;text-shadow:0 2px 26px rgba(8,7,7,.9)">
-    <p class="eyebrow" data-anim style="--d:0">02 <span class="dim">/</span> The competition</p>
-    <h2 data-anim style="--d:1;margin-top:14px;max-width:none">Four missions. Thirty minutes each.<br>No line of sight.</h2>
+    <p class="eyebrow" data-anim>03 <span class="dim">/</span> What we compete in</p>
+    <h2 data-anim style="--d:1;margin-top:14px;max-width:none">Four missions. Thirty minutes each.<br>The driver cannot see the rover.</h2>
   </div>
   <div style="position:absolute;left:68px;right:68px;bottom:100px;display:flex;flex-direction:column;gap:22px">
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px">
       <div data-anim style="--d:2;border-top:2px solid var(--vermilion);padding-top:11px">
-        <h3>Science</h3><p class="note" style="margin-top:4px;color:var(--ink-2)">Drill, sample, test for life</p></div>
+        <h3>Science</h3><p class="note" style="margin-top:4px;color:var(--ink-2)">Drill, collect soil, test it for signs of life</p></div>
       <div data-anim style="--d:3;border-top:2px solid var(--vermilion);padding-top:11px">
-        <h3>Delivery</h3><p class="note" style="margin-top:4px;color:var(--ink-2)">Fetch and carry for astronauts</p></div>
+        <h3>Delivery</h3><p class="note" style="margin-top:4px;color:var(--ink-2)">Carry tools and supplies to an astronaut</p></div>
       <div data-anim style="--d:4;border-top:2px solid var(--vermilion);padding-top:11px">
-        <h3>Servicing</h3><p class="note" style="margin-top:4px;color:var(--ink-2)">Switches, plugs, keyboards, valves</p></div>
+        <h3>Servicing</h3><p class="note" style="margin-top:4px;color:var(--ink-2)">Flip switches, plug in cables, turn valves</p></div>
       <div data-anim style="--d:5;border-top:2px solid var(--vermilion);padding-top:11px">
-        <h3>Autonomy</h3><p class="note" style="margin-top:4px;color:var(--ink-2)">Find the markers, hands off the joystick</p></div>
+        <h3>Autonomy</h3><p class="note" style="margin-top:4px;color:var(--ink-2)">Reach the markers with nobody driving</p></div>
     </div>
     <hr class="rule" data-anim="grow" style="--d:6">
     <div style="display:flex;gap:56px;align-items:flex-end">
       <div class="kpi" data-anim style="--d:7"><span class="n">116</span><span class="l">Teams entered · 18 countries</span></div>
       <div class="kpi" data-anim style="--d:8"><span class="n">38</span><span class="l">Reached the Utah finals</span></div>
       <div class="kpi" data-anim style="--d:9"><span class="n" style="color:var(--vermilion)">7<span class="u">th</span></span><span class="l">Where we finished</span></div>
-      <p class="body" data-anim style="--d:10;margin-left:auto;max-width:32ch;font-size:15px">The operator sits in a tent with no view of the rover.
-        Everything you are about to see exists because of that one rule.</p>
+      <p class="body" data-anim style="--d:10;margin-left:auto;max-width:32ch;font-size:15px">The operator sits in a tent with no view of the
+        rover. Every design choice in this talk comes from that one rule.</p>
     </div>
   </div>
 </section>
 
-<!-- ══════════════ 04 · THE CLIMB ══════════════ -->
-<section class="slide" data-topic="RANK HISTORY · 2018 → 2026">
-  <div class="stack" style="gap:20px;height:100%">
+<!-- ══════════════ 05 · RESULTS ══════════════ -->
+<section class="slide" data-topic="RESULTS · URC + IRC · 2018 → 2026">
+  <div class="stack" style="gap:16px;height:100%">
     <div class="head">
-      <p class="eyebrow" data-anim style="--d:0">03 <span class="dim">/</span> The climb</p>
-      <h2 data-anim style="--d:1">Eight years of getting less bad at this</h2>
+      <p class="eyebrow" data-anim>04 <span class="dim">/</span> Where we have finished</p>
+      <h2 data-anim style="--d:1">Two competitions, eight years</h2>
     </div>
-    <div data-anim="fade" style="--d:2;flex:1;display:flex;flex-direction:column;justify-content:center;gap:10px">
-      <svg viewBox="0 0 1144 368" style="width:100%;height:auto" role="img" aria-label="BRACU Mongol-Tori world ranking at the University Rover Challenge: 13th in 2018, 4th in 2021, 16th in 2023, 21st in 2024, 8th in 2025, 7th in 2026.">
+    <div data-anim="fade" style="--d:2;flex:1;display:flex;flex-direction:column;justify-content:center;gap:8px">
+      <svg viewBox="0 0 1144 330" style="width:100%;height:auto" role="img" aria-label="BRACU Mongol-Tori rankings. University Rover Challenge: 13th in 2018, 4th in 2021, 16th in 2023, 21st in 2024, 8th in 2025, 7th in 2026. International Rover Challenge: 3rd in 2018, 7th in 2020, 9th in 2023.">
         <g stroke="rgba(246,241,236,.09)" stroke-width="1">
-          <line x1="112" y1="34" x2="1104" y2="34"/><line x1="112" y1="96.5" x2="1104" y2="96.5"/>
-          <line x1="112" y1="159" x2="1104" y2="159"/><line x1="112" y1="221.5" x2="1104" y2="221.5"/>
-          <line x1="112" y1="284" x2="1104" y2="284"/><line x1="112" y1="334" x2="1104" y2="334"/>
+          <line x1="112" y1="30" x2="1104" y2="30"/><line x1="112" y1="86" x2="1104" y2="86"/>
+          <line x1="112" y1="142" x2="1104" y2="142"/><line x1="112" y1="198" x2="1104" y2="198"/>
+          <line x1="112" y1="254" x2="1104" y2="254"/><line x1="112" y1="299" x2="1104" y2="299"/>
         </g>
         <g fill="#8B7F76" font-family="IBM Plex Mono, monospace" font-size="11" text-anchor="start">
-          <text x="34" y="38">1st</text><text x="34" y="100.5">5th</text><text x="34" y="163">10th</text>
-          <text x="34" y="225.5">15th</text><text x="34" y="288">20th</text><text x="34" y="338">25th</text>
+          <text x="34" y="34">1st</text><text x="34" y="90">5th</text><text x="34" y="146">10th</text>
+          <text x="34" y="202">15th</text><text x="34" y="258">20th</text><text x="34" y="303">25th</text>
         </g>
-        <path d="M170 184 L500 71.5 L720 221.5 L830 284 L940 121.5 L1050 109"
-              fill="none" stroke="#FC9D2D" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"
+        <!-- IRC: 2018 3rd, 2020 7th, 2023 9th -->
+        <path d="M170 52 L390 97 L720 119" fill="none" stroke="#2FA6A8" stroke-width="2" stroke-dasharray="5 5" stroke-linejoin="round" opacity=".9"/>
+        <g class="pts">
+          <circle cx="170" cy="52"  r="5" fill="#2FA6A8" stroke="#111010" stroke-width="2"/>
+          <circle cx="390" cy="97"  r="5" fill="#2FA6A8" stroke="#111010" stroke-width="2"/>
+          <circle cx="720" cy="119" r="5" fill="#2FA6A8" stroke="#111010" stroke-width="2"/>
+          <g font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="22" fill="#C7BCB2" text-anchor="middle">
+            <text x="170" y="42">3rd</text><text x="390" y="87">7th</text><text x="748" y="124">9th</text>
+          </g>
+        </g>
+        <!-- URC -->
+        <path d="M170 164 L500 64 L720 197 L830 253 L940 108 L1050 97"
+              fill="none" stroke="#D07E17" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"
               pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" class="drawline"/>
         <g class="pts">
-          <circle cx="170"  cy="184"   r="5.5" fill="#FC9D2D" stroke="#111010" stroke-width="2"/>
-          <circle cx="500"  cy="71.5"  r="5.5" fill="#FC9D2D" stroke="#111010" stroke-width="2"/>
-          <circle cx="720"  cy="221.5" r="5.5" fill="#FC9D2D" stroke="#111010" stroke-width="2"/>
-          <circle cx="830"  cy="284"   r="5.5" fill="#FC9D2D" stroke="#111010" stroke-width="2"/>
-          <circle cx="940"  cy="121.5" r="5.5" fill="#FC9D2D" stroke="#111010" stroke-width="2"/>
-          <circle cx="1050" cy="109"   r="9"   fill="#E64126" stroke="#111010" stroke-width="3"/>
+          <circle cx="170"  cy="164" r="5.5" fill="#D07E17" stroke="#111010" stroke-width="2"/>
+          <circle cx="500"  cy="64"  r="5.5" fill="#D07E17" stroke="#111010" stroke-width="2"/>
+          <circle cx="720"  cy="197" r="5.5" fill="#D07E17" stroke="#111010" stroke-width="2"/>
+          <circle cx="830"  cy="253" r="5.5" fill="#D07E17" stroke="#111010" stroke-width="2"/>
+          <circle cx="940"  cy="108" r="5.5" fill="#D07E17" stroke="#111010" stroke-width="2"/>
+          <circle cx="1050" cy="97"  r="9"   fill="#E64126" stroke="#111010" stroke-width="3"/>
+          <g font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="25" fill="#F6F1EC" text-anchor="middle">
+            <text x="170" y="150">13th</text><text x="500" y="50">4th</text><text x="720" y="183">16th</text>
+            <text x="830" y="239">21st</text><text x="940" y="94">8th</text>
+          </g>
+          <text x="1050" y="72" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="44" fill="#E64126" text-anchor="middle">7th</text>
         </g>
-        <g font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="26" fill="#F6F1EC" text-anchor="middle" class="pts">
-          <text x="170" y="168">13th</text><text x="500" y="56">4th</text><text x="720" y="206">16th</text>
-          <text x="830" y="268">21st</text><text x="940" y="106">8th</text>
-        </g>
-        <text x="1050" y="82" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="46" fill="#E64126" text-anchor="middle" class="pts">7th</text>
         <g fill="#8B7F76" font-family="IBM Plex Mono, monospace" font-size="12" text-anchor="middle" letter-spacing="1">
-          <text x="170" y="360">2018</text><text x="500" y="360">2021</text><text x="720" y="360">2023</text>
-          <text x="830" y="360">2024</text><text x="940" y="360">2025</text>
-          <text x="1050" y="360" fill="#F6F1EC">2026</text>
+          <text x="170" y="324">2018</text><text x="390" y="324">2020</text><text x="500" y="324">2021</text>
+          <text x="720" y="324">2023</text><text x="830" y="324">2024</text><text x="940" y="324">2025</text>
+          <text x="1050" y="324" fill="#F6F1EC">2026</text>
         </g>
       </svg>
-      <p class="tiny" style="text-align:right">World ranking at the University Rover Challenge · lower is better</p>
+      <div style="display:flex;gap:26px;align-items:center;justify-content:flex-end">
+        <span style="display:flex;align-items:center;gap:8px" class="tiny"><span style="width:16px;height:3px;background:#D07E17;display:block"></span>University Rover Challenge, Utah</span>
+        <span style="display:flex;align-items:center;gap:8px" class="tiny"><span style="width:16px;height:0;border-top:2px dashed #2FA6A8;display:block"></span>International Rover Challenge, India</span>
+        <span class="tiny">World rank · lower is better</span>
+      </div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;padding-bottom:6px">
-      <p class="body" data-anim style="--d:3;font-size:15.5px"><b>2018 · 13th of 95.</b> First trip to Utah. We had a rover and almost no idea what we were doing.</p>
-      <p class="body" data-anim style="--d:4;font-size:15.5px"><b>2024 · 21st.</b> The bad year. Nothing broke spectacularly; everything was just slightly worse than it needed to be.</p>
-      <p class="body" data-anim style="--d:5;font-size:15.5px"><b>2025 → 2026 · 8th, then 7th.</b> Same core people, two years of not throwing the design away and starting over.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:30px;border-top:1px solid var(--line);padding-top:15px">
+      <div data-anim style="--d:3"><p class="note"><b>2023 · circuit burned.</b> The team rebuilt the whole thing in four hours,
+        in a remote camp in Utah, and went back out to score.</p></div>
+      <div data-anim style="--d:4"><p class="note"><b>2024 · chassis broke</b> during an autonomous run. Fixed in six hours with
+        whatever was in the pit box.</p></div>
+      <div data-anim style="--d:5"><p class="note" style="color:var(--ink)"><b>Nothing here was a clean year.</b> The scores came
+        anyway, and that is the part we are proud of.</p></div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════ 05 · BANGLADESH ══════════════ -->
-<section class="slide" data-topic="5 BD TEAMS IN FINALS · 3 IN THE TOP 11">
+<!-- ══════════════ 06 · BANGLADESH ══════════════ -->
+<section class="slide" data-topic="5 BD TEAMS IN THE FINALS · 3 IN THE TOP 11">
   <div class="stack" style="gap:26px;height:100%">
     <div class="head">
-      <p class="eyebrow" data-anim style="--d:0">04 <span class="dim">/</span> Not just us</p>
+      <p class="eyebrow" data-anim>05 <span class="dim">/</span> Not just us</p>
       <h2 data-anim style="--d:1">Three of the world's top eleven rovers were built in Dhaka</h2>
     </div>
     <hr class="rule" data-anim="grow" style="--d:2">
@@ -354,349 +433,271 @@ em{font-style:normal;color:var(--amber)}
       </div>
       <div class="stack" style="gap:22px;justify-content:center">
         <div class="kpi" data-anim style="--d:5"><span class="n" style="font-size:88px">5</span><span class="l">Bangladeshi teams in the finals</span></div>
-        <p class="body" data-anim style="--d:6;font-size:16.5px">No other country outside the United States sent that many. UIU's third place is the
-          best result any Asian team has ever posted.</p>
-        <p class="body" data-anim style="--d:7;font-size:16.5px;color:var(--ink);border-left:2px solid var(--vermilion);padding-left:14px">
-          We are not competing with the teams in this room. We are all competing with Utah.</p>
+        <p class="body" data-anim style="--d:6;font-size:16.5px">Only the United States sent more. UIU's third place is the best any
+          Asian team has managed.</p>
+        <p class="body quote" data-anim style="--d:7;font-size:16.5px">We are not really competing with the teams in this room. We are
+          all competing with Utah.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════ 06 · MEET TAURUS ══════════════ -->
+<!-- ══════════════ 07 · MEET TAURUS ══════════════ -->
 <section class="slide" data-topic="ROVER · TAURUS · URC 2026">
-  <div class="cols" style="grid-template-columns:1fr 452px">
-    <div class="stack" style="gap:22px;padding-top:8px">
+  <div class="cols" style="grid-template-columns:330px 1fr">
+    <div class="stack" style="gap:20px;padding-top:6px">
       <div class="head">
-        <p class="eyebrow" data-anim style="--d:0">05 <span class="dim">/</span> The machine</p>
+        <p class="eyebrow" data-anim>06 <span class="dim">/</span> The rover</p>
         <h2 data-anim style="--d:1">Taurus</h2>
-        <p class="lead" data-anim style="--d:2;font-size:19px;max-width:46ch">One chassis that has to drill rock, plug a cable into a socket,
-          climb a hill and then find its own way home.</p>
       </div>
-      <ul class="specs" data-anim style="--d:3">
-        <li><span class="k">Mobility</span><span class="v">Four-wheel rocker-bogie · universal-joint linkages · tapered roller bearings</span></li>
-        <li><span class="k">Structure</span><span class="v">Steel load skeleton + aluminium electronics bay · TPU-printed wheel grips</span></li>
-        <li><span class="k">Manipulator</span><span class="v">7-DOF arm on a linear rail · 3-DOF end effector</span></li>
-        <li><span class="k">Brains</span><span class="v">Jetson Orin Nano onboard · x86 base station · ROS 2</span></li>
-        <li><span class="k">Power</span><span class="v">In-house GaN distribution board · 6 rails · 2.8 kW peak budget</span></li>
-        <li><span class="k">Link</span><span class="v">433 MHz + 2.4 GHz + 5.8 GHz, all live at once</span></li>
+      <p class="body" data-anim style="--d:2;font-size:16.5px">One machine that has to drill rock, plug in a cable, climb a hill
+        and then drive itself home. Everything is a compromise between those four jobs.</p>
+      <ul class="specs" data-anim style="--d:3;font-size:15px">
+        <li style="grid-template-columns:1fr"><span class="v">Four-wheel rocker-bogie, so every wheel stays loaded on broken ground</span></li>
+        <li style="grid-template-columns:1fr"><span class="v">Steel frame, aluminium electronics bay, 3D-printed wheel grips</span></li>
+        <li style="grid-template-columns:1fr"><span class="v">7-axis arm mounted on a sliding rail, so it reaches without getting heavier</span></li>
+        <li style="grid-template-columns:1fr"><span class="v">Three radio bands live at the same time</span></li>
       </ul>
-      <p class="tiny" data-anim style="--d:4">Modelled in SolidWorks · validated by FEA under peak load before a single tube was cut</p>
+      <p class="tiny" data-anim style="--d:4">Drawn in SolidWorks · stress-tested in simulation before anything was cut</p>
     </div>
-    <div class="photo to-rail" data-anim="fade" style="--d:2;margin:-52px -68px -76px 0">
-      <img src="{{IMG_ROVER}}" alt="Taurus rover in the Utah badlands with its manipulator arm extended">
-      <div class="cap">Taurus · Mars Yard, MDRS</div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════ 07 · STRUCTURE ══════════════ -->
-<section class="slide" data-topic="MECHANICAL · ROCKER-BOGIE · FEA">
-  <div class="stack" style="gap:24px;height:100%">
-    <div class="head">
-      <p class="eyebrow" data-anim style="--d:0">06 <span class="dim">/</span> Structure &amp; mobility</p>
-      <h2 data-anim style="--d:1">Built for the terrain we could actually test on</h2>
-    </div>
-    <hr class="rule" data-anim="grow" style="--d:2">
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:40px;flex:1;align-content:center">
-      <div class="stack" style="gap:12px">
-        <h3 data-anim style="--d:3;color:var(--amber)">Rocker-bogie, four wheels</h3>
-        <p class="body" data-anim style="--d:4;font-size:16px">Keeps every wheel loaded on broken ground. The chassis-to-rocker joint runs on
-          tapered roller bearings because those loads are <b>radial and axial at the same time</b> the moment the rover turns on a slope.</p>
-      </div>
-      <div class="stack" style="gap:12px">
-        <h3 data-anim style="--d:4;color:var(--amber)">Steel where it matters</h3>
-        <p class="body" data-anim style="--d:5;font-size:16px">A steel skeleton carries load; an aluminium box carries the electronics.
-          TPU grips printed in the lab go on stainless wheels — traction and vibration damping for the cost of filament.</p>
-      </div>
-      <div class="stack" style="gap:12px">
-        <h3 data-anim style="--d:5;color:var(--amber)">Simulated, then abused</h3>
-        <p class="body" data-anim style="--d:6;font-size:16px">Every rocker link, bearing housing and chassis joint went through FEA at
-          maximum anticipated load. Then we drove it through mud, dust and rain in Savar until something complained.</p>
-      </div>
-    </div>
-    <div data-anim style="--d:7;display:grid;grid-template-columns:repeat(3,1fr);gap:30px;border-top:1px solid var(--line);padding-top:20px">
-      <div style="display:flex;gap:14px;align-items:baseline">
-        <span style="font-family:var(--f-display);font-weight:700;font-size:42px;color:var(--ink);line-height:1">2.5<span style="font-size:20px;color:var(--amber)">h</span></span>
-        <span class="note" style="max-width:26ch">Continuous operation at 30 °C — the batteries gave up before the rover did</span>
-      </div>
-      <div style="display:flex;gap:14px;align-items:baseline">
-        <span style="font-family:var(--f-display);font-weight:700;font-size:42px;color:var(--ink);line-height:1">&lt;1<span style="font-size:20px;color:var(--amber)">s</span></span>
-        <span class="note" style="max-width:26ch">Full power-down from the master emergency stop, verified with a multimeter</span>
-      </div>
-      <div style="display:flex;gap:14px;align-items:baseline">
-        <span style="font-family:var(--f-display);font-weight:700;font-size:42px;color:var(--vermilion);line-height:1">5<span style="font-size:20px;color:var(--amber)">min</span></span>
-        <span class="note" style="max-width:28ch"><b style="color:var(--vermilion)">Failed.</b> The electronics box leaked in the 15-minute rain test. It is on the fix list, in writing.</span>
-      </div>
+    <div data-anim="fade" style="--d:2;display:flex;align-items:center;justify-content:center;padding:4px 0 10px">
+      <img src="{{ROVER_DIAGRAM}}" alt="Annotated drawing of the rover showing the triple-band antenna mast, inertial navigation system, kill switch, batteries, rocker-bogie suspension, airless wheels, linear rail and the arm's pitch, yaw and roll axes" style="max-width:100%;max-height:560px;width:auto;height:auto;display:block">
     </div>
   </div>
 </section>
 
-<!-- ══════════════ 08 · ARM ══════════════ -->
-<section class="slide" data-topic="ARM · 7 DOF + LINEAR RAIL">
-  <div class="cols" style="grid-template-columns:436px 1fr">
-    <div class="photo to-rail" data-anim="fade" style="--d:1;margin:-52px 0 -76px -68px">
-      <img src="{{IMG_ARM}}" alt="Close-up of the seven degree of freedom manipulator arm and gripper">
-      <div class="cap">7-DOF manipulator · end effector detail</div>
-    </div>
-    <div class="stack" style="gap:22px;padding-top:8px">
-      <div class="head">
-        <p class="eyebrow" data-anim style="--d:0">07 <span class="dim">/</span> The arm</p>
-        <h2 data-anim style="--d:1">Seven degrees of freedom, and one cheat</h2>
-      </div>
-      <p class="body" data-anim style="--d:2">The whole arm sits on a <b>linear rail</b>. Instead of solving reach with a longer,
-        heavier, wobblier arm, we slide the entire base sideways. Reach goes up, inertia does not.</p>
-      <ul class="specs" data-anim style="--d:3">
-        <li><span class="k">Heavy joints</span><span class="v">Linear actuators drive shoulder, elbow and macro-pitch — mass stays near the chassis</span></li>
-        <li><span class="k">Base rotation</span><span class="v">Worm gear · cannot be back-driven, so it holds position under load with no power</span></li>
-        <li><span class="k">Wrist</span><span class="v">BLDC pitch, DC roll — 3-DOF end effector for fine work</span></li>
-        <li><span class="k">Gripper</span><span class="v">TPU-printed jaws on a metal frame · high-torque gear motor</span></li>
-      </ul>
-      <p class="body" data-anim style="--d:4;font-size:16px;color:var(--ink);border-left:2px solid var(--vermilion);padding-left:14px;max-width:44ch">
-        Servicing tasks are scored on flipping switches and inserting plugs. That is a millimetre problem solved from a kilometre away.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════ 09 · THE LINK ══════════════ -->
+<!-- ══════════════ 08 · THE LINK ══════════════ -->
 <section class="slide" data-topic="COMMS · 433 MHz / 2.4 GHz / 5.8 GHz">
+  <div class="stack" style="gap:18px;height:100%">
+    <div class="head">
+      <p class="eyebrow" data-anim>07 <span class="dim">/</span> Breakthrough one — the radio link</p>
+      <h2 data-anim style="--d:1">Three bands, so losing one does not end the run</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 348px;gap:36px;flex:1">
+      <div class="stack" style="gap:0;justify-content:center">
+        <div data-anim style="--d:2;display:grid;grid-template-columns:150px 1fr 132px;gap:18px;align-items:center;padding:14px 0;border-top:1px solid var(--line)">
+          <div><div style="font-family:var(--f-display);font-weight:700;font-size:30px;line-height:1;color:var(--ink)">433 MHz</div>
+               <div class="tiny" style="margin-top:3px;color:var(--amber)">SATEL SATELLINE-EASy</div></div>
+          <div><div style="font-size:16px;color:var(--ink)">Driving commands and telemetry</div>
+               <div class="note" style="margin-top:2px">Narrow 25 kHz channel. Slow, but it gets through hills.</div></div>
+          <div style="text-align:right"><span style="font-family:var(--f-display);font-weight:700;font-size:26px;color:var(--ink)">1.2 km</span>
+               <div class="tiny">through terrain</div></div>
+        </div>
+        <div data-anim style="--d:3;display:grid;grid-template-columns:150px 1fr 132px;gap:18px;align-items:center;padding:14px 0;border-top:1px solid var(--line)">
+          <div><div style="font-family:var(--f-display);font-weight:700;font-size:30px;line-height:1;color:var(--ink)">5.8 GHz</div>
+               <div class="tiny" style="margin-top:3px;color:var(--amber)">Ubiquiti Rocket AC · 2×2 MIMO</div></div>
+          <div><div style="font-size:16px;color:var(--ink)">Video and data</div>
+               <div class="note" style="margin-top:2px">40 MHz channel. Omni on the rover, sector antenna at base.</div></div>
+          <div style="text-align:right"><span style="font-family:var(--f-display);font-weight:700;font-size:26px;color:var(--ink)">900 m</span>
+               <div class="tiny">no line of sight</div></div>
+        </div>
+        <div data-anim style="--d:4;display:grid;grid-template-columns:150px 1fr 132px;gap:18px;align-items:center;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+          <div><div style="font-family:var(--f-display);font-weight:700;font-size:30px;line-height:1;color:var(--ink-2)">2.4 GHz</div>
+               <div class="tiny" style="margin-top:3px;color:var(--amber)">Ubiquiti Bullet AC</div></div>
+          <div><div style="font-size:16px;color:var(--ink-2)">Backup for the video link</div>
+               <div class="note" style="margin-top:2px">We tested it by switching the main link off mid-run.</div></div>
+          <div style="text-align:right"><span class="tiny" style="color:var(--ink-2)">Standby</span></div>
+        </div>
+        <p class="body quote" data-anim style="--d:5;font-size:16px;margin-top:18px;max-width:56ch">Those distances are
+          <b>with hills in the way</b>. In open line of sight the link goes very much further — the numbers we quote are the
+          worst case, because the competition is the worst case.</p>
+      </div>
+      <div class="stack" style="gap:14px;justify-content:center">
+        <div class="photo" data-anim="fade" style="--d:3;height:268px">
+          <img src="{{IMG_SATEL}}" alt="Two SATEL SATELLINE-EASy radio modems held up in the lab">
+          <div class="cap">SATELLINE-EASy · the pair that runs the command link</div>
+        </div>
+        <img src="{{P_SATEL}}" alt="SATEL" class="plogo" data-anim style="--d:5;height:38px;margin:6px auto 0">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 09 · ANTENNAS ══════════════ -->
+<section class="slide" data-topic="RF · ANTENNAS BUILT WITH COMPLETECH">
+  <div class="cols" style="grid-template-columns:1fr 470px">
+    <div class="stack" style="gap:22px;padding-top:6px">
+      <div class="head">
+        <p class="eyebrow" data-anim>08 <span class="dim">/</span> Breakthrough two — the antennas</p>
+        <h2 data-anim style="--d:1">We stopped using<br>the antennas in the box</h2>
+      </div>
+      <p class="body" data-anim style="--d:2;font-size:17px">A radio's range on the datasheet was measured somewhere that is not
+        our test field. So we contacted <b>CompleTech</b> in Finland, the company behind ComAnt antennas, and asked if their
+        engineers would look at our problem.</p>
+      <p class="body" data-anim style="--d:3;font-size:17px">They did. We sat in calls with them and worked through it together:
+        we simulated our own testing grounds, they designed antennas for that specific case, and we measured the result in the
+        field instead of trusting a number.</p>
+      <ul class="specs" data-anim style="--d:4">
+        <li><span class="k">On the rover</span><span class="v">2×2 MIMO omni, plus a Miniflex for the 433 MHz link</span></li>
+        <li><span class="k">At the base</span><span class="v">2×2 MIMO sector antenna on the mast</span></li>
+        <li><span class="k">Checked by</span><span class="v">RF simulation of the actual site, then a real range test</span></li>
+      </ul>
+      <p class="body quote" data-anim style="--d:5;font-size:16.5px;max-width:52ch">They had no reason to help a student team in
+        Dhaka. They helped because we asked a specific technical question. That is worth knowing if you are starting out.</p>
+    </div>
+    <div class="stack" style="gap:16px;padding-top:6px;justify-content:center">
+      <div class="photo" data-anim="fade" style="--d:2;height:304px">
+        <img src="{{IMG_COMPLETECH}}" alt="Video call between Mongol-Tori engineers and CompleTech's antenna engineer">
+        <div class="cap">Working the antenna design with CompleTech, Finland</div>
+      </div>
+      <img src="{{P_COMPLETECH}}" alt="CompleTech" class="plogo" data-anim style="--d:4;height:38px;margin:4px auto 0">
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 10 · AUTONOMY ══════════════ -->
+<section class="slide" data-topic="NAV · SBG INERTIAL + GNSS + VISION">
   <div class="stack" style="gap:20px;height:100%">
     <div class="head">
-      <p class="eyebrow" data-anim style="--d:0">08 <span class="dim">/</span> Communications</p>
-      <h2 data-anim style="--d:1">Three bands, because one band is a single point of failure</h2>
+      <p class="eyebrow" data-anim>09 <span class="dim">/</span> Breakthrough three — knowing where it is</p>
+      <h2 data-anim style="--d:1">Four sensors, each wrong in a different way</h2>
     </div>
-    <p class="lead" data-anim style="--d:2;font-size:18px;max-width:80ch">Frequency diversity: the command link, the data link and the video link
-      live on different bands, on different hardware. Kill any one of them mid-mission and the rover still comes home.</p>
-
-    <div class="stack" style="gap:0;flex:1;justify-content:center">
-      <!-- band 1 -->
-      <div data-anim style="--d:3;display:grid;grid-template-columns:190px 176px 1fr 128px;gap:22px;align-items:center;padding:15px 0;border-top:1px solid var(--line)">
-        <div><div style="font-family:var(--f-display);font-weight:700;font-size:31px;line-height:1;color:var(--ink)">433 MHz</div>
-             <div class="tiny" style="margin-top:3px;color:var(--amber)">SATEL SATELLINE-EASy</div></div>
-        <div><div style="font-size:16px;color:var(--ink)">Command &amp; telemetry</div>
-             <div class="tiny" style="margin-top:2px">25 kHz narrowband · UHF ISM</div></div>
-        <div style="position:relative;height:16px;background:var(--line-soft);border-radius:2px;overflow:hidden">
-          <div data-anim="grow" style="--d:6;position:absolute;left:0;top:0;bottom:0;width:100%;background:linear-gradient(90deg,var(--vermilion),var(--amber));border-radius:2px;transform-origin:left"></div>
-        </div>
-        <div style="text-align:right"><span style="font-family:var(--f-display);font-weight:700;font-size:27px;color:var(--ink);font-variant-numeric:tabular-nums">1.2 km</span>
-             <div class="tiny">verified</div></div>
-      </div>
-      <!-- band 2 -->
-      <div data-anim style="--d:4;display:grid;grid-template-columns:190px 176px 1fr 128px;gap:22px;align-items:center;padding:15px 0;border-top:1px solid var(--line)">
-        <div><div style="font-family:var(--f-display);font-weight:700;font-size:31px;line-height:1;color:var(--ink)">5.8 GHz</div>
-             <div class="tiny" style="margin-top:3px;color:var(--amber)">Ubiquiti Rocket AC · 2×2 MIMO</div></div>
-        <div><div style="font-size:16px;color:var(--ink)">Primary data + vision</div>
-             <div class="tiny" style="margin-top:2px">40 MHz channel · omni + sector</div></div>
-        <div style="position:relative;height:16px;background:var(--line-soft);border-radius:2px;overflow:hidden">
-          <div data-anim="grow" style="--d:7;position:absolute;left:0;top:0;bottom:0;width:75%;background:linear-gradient(90deg,var(--vermilion),var(--amber));border-radius:2px;transform-origin:left"></div>
-        </div>
-        <div style="text-align:right"><span style="font-family:var(--f-display);font-weight:700;font-size:27px;color:var(--ink);font-variant-numeric:tabular-nums">900 m</span>
-             <div class="tiny">non-line-of-sight</div></div>
-      </div>
-      <!-- band 3 -->
-      <div data-anim style="--d:5;display:grid;grid-template-columns:190px 176px 1fr 128px;gap:22px;align-items:center;padding:15px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
-        <div><div style="font-family:var(--f-display);font-weight:700;font-size:31px;line-height:1;color:var(--ink-2)">2.4 GHz</div>
-             <div class="tiny" style="margin-top:3px;color:var(--amber)">Ubiquiti Bullet AC</div></div>
-        <div><div style="font-size:16px;color:var(--ink-2)">Redundant link</div>
-             <div class="tiny" style="margin-top:2px">20 MHz · shares the mast</div></div>
-        <div style="position:relative;height:16px;border-radius:2px;background:repeating-linear-gradient(135deg,rgba(252,157,45,.30) 0 7px,transparent 7px 14px);border:1px solid var(--line)"></div>
-        <div style="text-align:right"><span class="tiny" style="color:var(--ink-2)">Standby<br>failover</span></div>
-      </div>
-    </div>
-
-    <div data-anim style="--d:8;display:flex;gap:44px;align-items:center;border-top:1px solid var(--line-soft);padding-top:16px">
-      <p class="note" style="color:var(--ink-2);max-width:62ch">Plus <b>four analog FPV feeds</b> on 5.8 GHz and a digital FPV chain on OpenIPC + WFB-ng —
-        because when the data link stutters, the operator still needs eyes.</p>
-      <p class="tiny" style="margin-left:auto;text-align:right;line-height:1.5">RSSI −76 dBm at 900 m NLoS<br>measured in the field, not on a datasheet</p>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════ 10 · ANTENNAS ══════════════ -->
-<section class="slide" data-topic="RF · COMPLETECH × MONGOL-TORI">
-  <div class="cols" style="grid-template-columns:1fr 400px">
-    <div class="stack" style="gap:22px;padding-top:8px">
-      <div class="head">
-        <p class="eyebrow" data-anim style="--d:0">09 <span class="dim">/</span> The antennas</p>
-        <h2 data-anim style="--d:1">We stopped guessing<br>and called an RF engineer</h2>
-      </div>
-      <p class="body" data-anim style="--d:2;font-size:16.5px">A radio's advertised range was measured somewhere that is not Bangladesh. So we sat down with the
-        engineers at <b>CompleTech</b> — the Finnish antenna house behind ComAnt — and worked the problem properly.</p>
-      <ul class="specs" data-anim style="--d:3">
-        <li><span class="k">Step 01</span><span class="v">Simulate our <em>actual</em> test grounds — terrain, clutter, mast height</span></li>
-        <li><span class="k">Step 02</span><span class="v">Tune the antennas to those simulations, not to a generic pattern</span></li>
-        <li><span class="k">Step 03</span><span class="v">MIMO omni on the rover, MIMO sector at base, Miniflex for 433 MHz</span></li>
-        <li><span class="k">Step 04</span><span class="v">Measure the real range in the field before shipping a crate</span></li>
-      </ul>
-      <div data-anim style="--d:4;display:flex;gap:12px;align-items:center">
-        <span class="chip" style="font-size:11px;padding:6px 11px 5px">SATEL <span style="color:var(--ink-3)">radios</span></span>
-        <span class="chip" style="font-size:11px;padding:6px 11px 5px">CompleTech <span style="color:var(--ink-3)">antennas</span></span>
-        <span class="chip" style="font-size:11px;padding:6px 11px 5px">SBG Systems <span style="color:var(--ink-3)">inertial</span></span>
-      </div>
-      <p class="body" data-anim style="--d:5;font-size:16.5px;color:var(--ink);border-left:2px solid var(--vermilion);padding-left:14px;max-width:52ch">
-        Every one of those companies answered an email from a student team. That is the whole trick. Ask.</p>
-    </div>
-    <div class="photo to-rail" data-anim="fade" style="--d:2;margin:-52px -68px -76px 0">
-      <img src="{{IMG_MAST}}" alt="The rover's antenna mast raised in the field, carrying the omni and telemetry antennas">
-      <div class="cap">Rover mast · omni + telemetry + FPV antennas</div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════ 11 · AUTONOMY ══════════════ -->
-<section class="slide" data-topic="NAV · ROS 2 · JETSON ORIN NANO">
-  <div class="stack" style="gap:22px;height:100%">
-    <div class="head">
-      <p class="eyebrow" data-anim style="--d:0">10 <span class="dim">/</span> Autonomy</p>
-      <h2 data-anim style="--d:1">Four sensors that lie in different directions</h2>
-    </div>
-    <p class="lead" data-anim style="--d:2;font-size:18px;max-width:82ch">GNSS drifts. Wheels slip. The IMU integrates its own error. Stereo depth
-      hates featureless sand. So none of them gets to be right on its own.</p>
-
+    <p class="lead" data-anim style="--d:2;font-size:18px;max-width:84ch">GPS wanders. Wheels slip, so counting rotations lies.
+      An IMU drifts as it adds up its own small errors. Stereo cameras get lost on flat sand. Used together, their mistakes
+      cancel out.</p>
     <div data-anim="fade" style="--d:3;display:grid;grid-template-columns:238px 30px 1fr;gap:0 16px;align-items:center;flex:1">
       <div class="stack" style="gap:8px">
-        <div class="fusebox"><span class="fk">SBG Systems</span><span class="fv">High-rate inertial · attitude</span></div>
-        <div class="fusebox"><span class="fk">GNSS</span><span class="fv">Lat/lon → UTM · weighted by HDOP</span></div>
-        <div class="fusebox"><span class="fk">ZED 2i stereo</span><span class="fv">Depth + point cloud</span></div>
-        <div class="fusebox"><span class="fk">ArUco markers</span><span class="fv">6-DOF fix from known corners</span></div>
+        <div class="fusebox"><span class="fk">SBG Systems</span><span class="fv">Inertial unit — motion and attitude, fast</span></div>
+        <div class="fusebox"><span class="fk">GNSS</span><span class="fv">Global position, trusted less when satellites are poor</span></div>
+        <div class="fusebox"><span class="fk">ZED 2i stereo</span><span class="fv">Depth and a 3D point cloud of the ground</span></div>
+        <div class="fusebox"><span class="fk">ArUco markers</span><span class="fv">Exact fix whenever a known marker is in view</span></div>
       </div>
       <div style="display:flex;align-items:center;justify-content:center;color:var(--vermilion);font-size:26px">→</div>
       <div style="display:grid;grid-template-columns:1fr 30px 1fr 30px 1fr;align-items:center;gap:0 10px">
         <div class="stagebox">
-          <div class="sk">EKF</div>
-          <p class="sv">Fuses everything into one pose. Publishes <span class="mono">map → odom → base_link</span> with covariances.</p>
+          <div class="sk">One position</div>
+          <p class="sv">A Kalman filter merges all four into a single best guess of where the rover is, and how sure it is.</p>
         </div>
         <div class="arrow">→</div>
         <div class="stagebox">
-          <div class="sk">AMCL + NDT</div>
-          <p class="sv">360° sweep at mission start seeds a particle filter; NDT scan-matches against a pre-built 3D map.</p>
+          <div class="sk">One map</div>
+          <p class="sv">A 360° scan at the start is matched against a map we built beforehand, so it knows the terrain around it.</p>
         </div>
         <div class="arrow">→</div>
         <div class="stagebox">
-          <div class="sk">Nav2 + DWA</div>
-          <p class="sv">Global plan over the terrain map; local planner picks collision-free velocities inside the rover's kinematic limits.</p>
+          <div class="sk">One path</div>
+          <p class="sv">The planner picks a route to the goal and keeps re-checking it against whatever appears in front.</p>
         </div>
       </div>
     </div>
-
-    <div data-anim style="--d:5;display:grid;grid-template-columns:repeat(3,1fr);gap:34px;border-top:1px solid var(--line);padding-top:16px">
-      <p class="note" style="color:var(--ink-2)"><b>Centimetre-level correction.</b> Every validated ArUco detection resets accumulated dead-reckoning drift.</p>
-      <p class="note" style="color:var(--ink-2)"><b>Runs on a Jetson Orin Nano.</b> All perception and planning happens onboard, in ROS 2.</p>
-      <p class="note" style="color:var(--ink-2)"><b>Simulated first.</b> The whole stack is validated in a Unity model of the Mars Yard before it touches the rover.</p>
+    <div data-anim style="--d:5;display:flex;gap:34px;align-items:center;border-top:1px solid var(--line);padding-top:14px">
+      <p class="note" style="color:var(--ink-2);max-width:56ch">All of it runs onboard on a Jetson Orin Nano. We test the whole
+        stack in simulation first, because a bug found in software costs an afternoon and a bug found in the desert costs a mission.</p>
+      <img src="{{P_SBG}}" alt="SBG Systems" class="plogo" style="margin-left:auto;height:26px">
     </div>
   </div>
 </section>
 
-<!-- ══════════════ 12 · POWER ══════════════ -->
-<section class="slide" data-topic="EPS · GaN · 95% EFF · 2.8 kW PEAK">
+<!-- ══════════════ 11 · WE BUILD OUR OWN ══════════════ -->
+<section class="slide" data-topic="IN-HOUSE · KACCHIM CONTROLLER · POWER BOARD">
   <div class="stack" style="gap:22px;height:100%">
     <div class="head">
-      <p class="eyebrow" data-anim style="--d:0">11 <span class="dim">/</span> Power &amp; safety</p>
-      <h2 data-anim style="--d:1">Designed, laid out and soldered by undergraduates</h2>
+      <p class="eyebrow" data-anim>10 <span class="dim">/</span> Breakthrough four — our own boards</p>
+      <h2 data-anim style="--d:1">The parts we could not buy, we made</h2>
     </div>
     <hr class="rule" data-anim="grow" style="--d:2">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:52px;flex:1;padding-bottom:10px">
-      <div class="stack" style="gap:16px;justify-content:center">
-        <h3 data-anim style="--d:3;color:var(--amber)">The power board</h3>
-        <p class="body" data-anim style="--d:3;font-size:16px">A backplane with one hot-swappable daughterboard per rail —
-          3.3 V, 5 V, 12 V, 19.5 V, 24 V, 48 V. A rail dies, you pull the card and push in a spare. In the pits, at night, with a head torch.</p>
-        <ul class="specs" data-anim style="--d:4">
-          <li><span class="k">Switching</span><span class="v">EPC GaN FETs · LTC7891 buck + LM5125-Q1 boost</span></li>
-          <li><span class="k">Efficiency</span><span class="v">≥95% — less heat to move, more minutes of mission</span></li>
-          <li><span class="k">Protection</span><span class="v">eFuse per rail · reverse-polarity MOSFET on every input</span></li>
-          <li><span class="k">Telemetry</span><span class="v">INA226 / INA228 stream live volts &amp; amps to the base station</span></li>
-        </ul>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:52px;flex:1;align-content:center">
+      <div class="stack" data-anim style="--d:3;gap:14px">
+        <p class="tiny" style="color:var(--amber)">Our controller</p>
+        <h3 style="font-size:40px;color:var(--ink)">Kacchim</h3>
+        <p class="body" style="font-size:17.5px">Kacchim is the board we designed to sit between the computer and everything that
+          moves. It drives the motors, reads the sensors, runs the science payload and carries the wireless emergency stop.</p>
+        <p class="body" style="font-size:17.5px">One board across the whole rover means one thing to learn, one spare to carry,
+          and one place to look when something misbehaves at midnight.</p>
       </div>
-      <div class="stack" style="gap:16px;justify-content:center">
-        <h3 data-anim style="--d:4;color:var(--amber)">Two ways to stop it</h3>
-        <p class="body" data-anim style="--d:4;font-size:16px">One kill switch for the motors, one for the entire rover — deliberately
-          <b>identical circuits</b>, so a spare part fixes either. IRF3205 MOSFETs driven by a MIC4422, triggered by hardware buttons
-          or wirelessly through <b>Kacchim</b>, our own control board.</p>
-        <div data-anim style="--d:5;display:flex;gap:34px;margin-top:4px">
-          <div class="kpi"><span class="n" style="font-size:48px">2.8<span class="u">kW</span></span><span class="l">Peak power budget</span></div>
-          <div class="kpi"><span class="n" style="font-size:48px">147<span class="u">A</span></span><span class="l">Nominal current draw</span></div>
-          <div class="kpi"><span class="n" style="font-size:48px">6</span><span class="l">Independent rails</span></div>
-        </div>
-        <p class="body" data-anim style="--d:6;font-size:16px;color:var(--ink);border-left:2px solid var(--vermilion);padding-left:14px;margin-top:6px">
-          Buying a PDB is faster. Building one is why we can debug it at 2 a.m. in a Utah car park.</p>
+      <div class="stack" data-anim style="--d:4;gap:14px">
+        <p class="tiny" style="color:var(--amber)">Our power board</p>
+        <h3 style="font-size:40px;color:var(--ink)">Six rails, hot-swappable</h3>
+        <p class="body" style="font-size:17.5px">A backplane with one plug-in card per voltage. If a rail dies in the pit, you pull
+          the card and push in a spare instead of rewiring the rover.</p>
+        <p class="body" style="font-size:17.5px">GaN switching gets it above 95% efficient, every rail has its own fuse, and it
+          reports live voltage and current back to the base station.</p>
       </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:30px;border-top:1px solid var(--line);padding-top:16px">
+      <p class="note" data-anim style="--d:5;max-width:60ch"><b>Where we do buy, we buy well.</b> The arm joints use MyActuator
+        servo drives — the same class of actuator used on precision electronics assembly lines — and they back the team as a partner.</p>
+      <img src="{{P_MYACTUATOR}}" alt="MyActuator" class="plogo" data-anim style="--d:6;margin-left:auto;height:36px">
     </div>
   </div>
 </section>
 
-<!-- ══════════════ 13 · SCIENCE ══════════════ -->
-<section class="slide" data-topic="PAYLOAD · ASTROBIOLOGY">
-  <div class="stack" style="gap:22px;height:100%">
+<!-- ══════════════ 12 · DRONES + NAVY ══════════════ -->
+<section class="slide" data-topic="DRONES · BANGLADESH NAVY VISIT">
+  <div class="cols" style="grid-template-columns:1fr 486px">
+    <div class="stack" style="gap:22px;padding-top:6px;justify-content:center">
+      <div class="head">
+        <p class="eyebrow" data-anim>11 <span class="dim">/</span> Not only rovers</p>
+        <h2 data-anim style="--d:1">We build drones too</h2>
+      </div>
+      <p class="body" data-anim style="--d:2;font-size:17px">The rover does not work alone. Our drone flies ahead of it during a
+        mission, looks at ground the rover cannot see yet, and stays on the same radio network as the rover and the base station.</p>
+      <p class="body" data-anim style="--d:3;font-size:17px">The navigation problem is the same one: a machine working out where it
+        is and what is around it, without a person driving. Solving it once pays off twice.</p>
+      <p class="body quote" data-anim style="--d:4;font-size:16.5px;max-width:52ch">The <b>Bangladesh Navy</b> came to our lab to
+        see the drone work. Students explained it to them at the table, which is roughly how everything here starts.</p>
+    </div>
+    <div class="photo to-rail" data-anim="fade" style="--d:2;margin:-52px -68px -76px 0">
+      <img src="{{IMG_NAVY}}" alt="Bangladesh Navy officers at the BRAC University lab as students demonstrate the drone">
+      <div class="cap">Bangladesh Navy at the BRAC University robotics lab</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 13 · OUTREACH ══════════════ -->
+<section class="slide" data-topic="OUTREACH · ELEVEN YEARS OF SHOWING UP">
+  <div class="stack" style="gap:18px;height:100%">
     <div class="head">
-      <p class="eyebrow" data-anim style="--d:0">12 <span class="dim">/</span> Science payload</p>
-      <h2 data-anim style="--d:1">Looking for life, with a load cell and a drill</h2>
+      <p class="eyebrow" data-anim>12 <span class="dim">/</span> Outreach</p>
+      <h2 data-anim style="--d:1">We take the rover to schools</h2>
     </div>
-    <hr class="rule" data-anim="grow" style="--d:2">
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:26px;flex:1;align-content:center">
-      <div class="stack" data-anim style="gap:11px;--d:2"><span class="tiny" style="color:var(--vermilion)">01 · Acquire</span>
-        <h3>Auger drill</h3><p class="body" style="font-size:15.5px">Cuts to depth in loose analog soil with torque margin and limit
-          switches, so a jammed bit stops the motor instead of burning it.</p></div>
-      <div class="stack" data-anim style="gap:11px;--d:3"><span class="tiny" style="color:var(--vermilion)">02 · Contain</span>
-        <h3>Sealed sample boxes</h3><p class="body" style="font-size:15.5px">Locking lids and retention foam. A sample that spills
-          on the drive home is a sample you never collected.</p></div>
-      <div class="stack" data-anim style="gap:11px;--d:4"><span class="tiny" style="color:var(--vermilion)">03 · Measure</span>
-        <h3>Onboard load cells</h3><p class="body" style="font-size:15.5px">Mass of every sample, weighed on the rover, to
-          ±1 g against reference masses.</p></div>
-      <div class="stack" data-anim style="gap:11px;--d:5"><span class="tiny" style="color:var(--vermilion)">04 · Assay</span>
-        <h3>Liquid handling + pH</h3><p class="body" style="font-size:15.5px">Gasket-sealed transfer, calibrated probe, plus a vision
-          pipeline for on-site markers and task verification.</p></div>
+    <p class="lead" data-anim style="--d:2;font-size:18px;max-width:88ch">For eleven years we have been driving a Mars rover into
+      school grounds and letting children hold the controller. Most of us are on this team because someone did that for us.</p>
+    <div style="display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:14px;flex:1">
+      <div class="photo" data-anim="fade" style="--d:3">
+        <img src="{{IMG_SCHOOL}}" alt="A team member explaining the rover to school students in uniform">
+        <div class="cap">A school classroom, and a rover on the floor</div>
+      </div>
+      <div class="photo" data-anim="fade" style="--d:4">
+        <img src="{{IMG_KID}}" alt="A young girl driving the rover with a hand controller">
+        <div class="cap">Her turn to drive</div>
+      </div>
+      <div class="photo" data-anim="fade" style="--d:5">
+        <img src="{{IMG_CROWD}}" alt="Two rovers demonstrated in a courtyard surrounded by students">
+        <div class="cap">Two rovers, one courtyard</div>
+      </div>
     </div>
-    <p class="body" data-anim style="--d:6;font-size:16px;border-top:1px solid var(--line);padding-top:16px;max-width:none">
-      The base station sends intent; the rover computer runs the mission logic; <b>Kacchim</b> drives the actuators and streams
-      load-cell and motor feedback back up the 433 MHz link. Same board, same protocol as the rest of the rover — one thing to learn, one thing to fix.</p>
+    <p class="body" data-anim style="--d:6;max-width:none;font-size:16px;border-top:1px solid var(--line);padding-top:14px">
+      A child who has driven a rover once stops thinking engineering is something that happens in other countries. That is the
+      whole point, and it costs us nothing but a weekend.</p>
   </div>
 </section>
 
-<!-- ══════════════ 14 · LESSONS ══════════════ -->
-<section class="slide" data-topic="DEBRIEF · WHAT WE'D TELL THE NEXT TEAM">
-  <div class="stack" style="gap:24px;height:100%">
-    <div class="head">
-      <p class="eyebrow" data-anim style="--d:0">13 <span class="dim">/</span> Debrief</p>
-      <h2 data-anim style="--d:1">Four things we'd tell a team starting today</h2>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:0;flex:1;justify-content:center">
-      <div data-anim style="--d:2;display:grid;grid-template-columns:58px 1fr;gap:26px;padding:17px 0;border-top:1px solid var(--line)">
-        <span style="font-family:var(--f-display);font-weight:700;font-size:36px;color:var(--vermilion);line-height:1">01</span>
-        <div><h3 style="font-size:26px">Redundancy scores points. Performance wins arguments.</h3>
-          <p class="body" style="font-size:16px;margin-top:5px">Three radio bands, four FPV feeds, two kill switches, hot-swap power rails.
-            Nearly every mission we scored, we scored because a backup existed.</p></div>
-      </div>
-      <div data-anim style="--d:3;display:grid;grid-template-columns:58px 1fr;gap:26px;padding:17px 0;border-top:1px solid var(--line)">
-        <span style="font-family:var(--f-display);font-weight:700;font-size:36px;color:var(--vermilion);line-height:1">02</span>
-        <div><h3 style="font-size:26px">Test where you expect to fail.</h3>
-          <p class="body" style="font-size:16px;margin-top:5px">Our electronics box leaked five minutes into a rain test. Finding that in
-            Dhaka cost us a weekend. Finding it in Utah would have cost us the season.</p></div>
-      </div>
-      <div data-anim style="--d:4;display:grid;grid-template-columns:58px 1fr;gap:26px;padding:17px 0;border-top:1px solid var(--line)">
-        <span style="font-family:var(--f-display);font-weight:700;font-size:36px;color:var(--vermilion);line-height:1">03</span>
-        <div><h3 style="font-size:26px">Industry will pick up the phone.</h3>
-          <p class="body" style="font-size:16px;margin-top:5px">CompleTech tuned our antennas. SATEL, SBG, Cytron, Ansys, Altium and twenty more
-            back this team. None of that started with money — it started with a student sending a technical question.</p></div>
-      </div>
-      <div data-anim style="--d:5;display:grid;grid-template-columns:58px 1fr;gap:26px;padding:17px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
-        <span style="font-family:var(--f-display);font-weight:700;font-size:36px;color:var(--vermilion);line-height:1">04</span>
-        <div><h3 style="font-size:26px">The report is part of the rover.</h3>
-          <p class="body" style="font-size:16px;margin-top:5px">Half the teams that never reach Utah are eliminated on paper. Write the design
-            document as carefully as you cut the aluminium.</p></div>
-      </div>
-    </div>
+<!-- ══════════════ 14 · ASTRONAUT ══════════════ -->
+<section class="slide bleed" data-topic="LAB VISIT · A NASA ASTRONAUT">
+  <!-- the photo carries its own logo watermarks along the top, so bias the crop downwards -->
+  <div class="bleed-img"><img src="{{IMG_ASTRONAUT}}" style="object-position:center 92%" alt="A NASA astronaut in a blue flight suit listening to a Mongol-Tori student explain the rover in the lab"></div>
+  <div class="scrim-b" style="background:linear-gradient(to top,rgba(12,11,11,.98) 0%,rgba(12,11,11,.93) 36%,rgba(12,11,11,.5) 60%,rgba(12,11,11,.10) 84%)"></div>
+  <div class="grain"></div>
+  <div style="position:absolute;left:68px;right:68px;bottom:104px">
+    <p class="eyebrow" data-anim>13 <span class="dim">/</span> A visit to the lab</p>
+    <h2 data-anim style="--d:1;max-width:20ch;margin-top:14px">An astronaut came to our lab</h2>
+    <p class="lead" data-anim style="--d:2;margin-top:16px;max-width:58ch;color:var(--ink)">He did not come to see a famous
+      laboratory. He came to see a group of students who love solving engineering problems, standing next to a rover they built
+      with their own hands.</p>
   </div>
 </section>
 
-<!-- ══════════════ 15 · SPONSORS ══════════════ -->
+<!-- ══════════════ 15 · PARTNERS ══════════════ -->
 <section class="slide" data-topic="PARTNERS · 23 ORGANISATIONS">
-  <div class="stack" style="gap:20px;height:100%">
+  <div class="stack" style="gap:18px;height:100%">
     <div class="head">
-      <p class="eyebrow" data-anim style="--d:0">14 <span class="dim">/</span> Partners</p>
+      <p class="eyebrow" data-anim>14 <span class="dim">/</span> Partners</p>
       <h2 data-anim style="--d:1">None of this happens on a student budget</h2>
     </div>
-    <p class="lead" data-anim style="--d:2;font-size:17px;max-width:none">Radios, antennas, inertial units, motor drivers, simulation licences,
-      PCB fabrication, flights to Utah — 23 companies and organisations put something real behind this rover.</p>
+    <p class="lead" data-anim style="--d:2;font-size:17px;max-width:none">Radios, antennas, inertial units, actuators, motor
+      drivers, simulation software, circuit boards, flights to Utah. Twenty-three companies and organisations back this team —
+      several of them with engineering time, which is worth more than money.</p>
     <div data-anim="fade" style="--d:3;flex:1;display:flex;align-items:center;justify-content:center;padding:4px 0 8px">
       <div style="width:100%;max-width:1144px">{{SPONSORS_SVG}}</div>
     </div>
@@ -704,16 +705,19 @@ em{font-style:normal;color:var(--amber)}
 </section>
 
 <!-- ══════════════ 16 · CLOSE ══════════════ -->
-<section class="slide bleed" data-topic="LINK CLOSED · ধন্যবাদ">
-  <div class="bleed-img"><img data-anim="zoom" src="{{IMG_WIDE}}" alt="Wide view of the rover and lander mock-up under an open Utah sky"></div>
-  <div class="scrim-b" style="background:linear-gradient(to top,rgba(12,11,11,.97) 0%,rgba(12,11,11,.9) 30%,rgba(12,11,11,.55) 52%,rgba(12,11,11,.1) 78%)"></div>
+<section class="slide bleed" data-topic="ধন্যবাদ · THANK YOU">
+  <div class="bleed-img"><img data-anim="zoom" src="{{IMG_WIDE}}" alt="Wide view of the rover and the lander mock-up under an open Utah sky"></div>
+  <div class="scrim-b"></div>
   <div class="grain"></div>
   <div style="position:absolute;left:68px;right:68px;bottom:112px;display:flex;align-items:flex-end;gap:60px">
     <div style="flex:1">
-      <p class="eyebrow" data-anim style="--d:0">Mongol Tori <span class="dim">/</span> <span class="bn">মঙ্গল তরী</span> <span class="dim">/</span> "Mars Chariot"</p>
-      <h1 data-anim style="--d:1;font-size:76px;margin-top:12px">Come find us<br>after this</h1>
-      <p class="lead" data-anim style="--d:2;margin-top:16px;max-width:42ch;color:var(--ink)">Ask us anything — link budgets, gear ratios, what we broke,
-        what it cost. We would rather Bangladesh had ten good rover teams than one.</p>
+      <div style="display:flex;align-items:center;gap:14px" data-anim>
+        <img src="{{LOGO_MARK}}" alt="" style="height:34px;width:auto;display:block">
+        <p class="eyebrow">Mongol Tori <span class="dim">/</span> <span class="bn">মঙ্গল তরী</span> <span class="dim">/</span> Mars Chariot</p>
+      </div>
+      <h1 data-anim style="--d:1;font-size:76px;margin-top:14px">Come talk to us<br>after this</h1>
+      <p class="lead" data-anim style="--d:2;margin-top:16px;max-width:44ch;color:var(--ink)">Ask us anything — what it cost, what
+        broke, how to start a team. We would rather Bangladesh had ten good rover teams than one.</p>
     </div>
     <div class="stack" data-anim style="--d:3;gap:9px;text-align:right;padding-bottom:8px">
       <p class="tiny" style="color:var(--ink-2)">youtube.com/@bracumongoltori</p>
@@ -727,7 +731,7 @@ em{font-style:normal;color:var(--amber)}
 <!-- ══════════════ CHROME ══════════════ -->
 <div id="ticks"></div>
 <div id="rail">
-  <span class="seg"><span class="live"></span><span id="railTopic">MDRS · UTAH</span></span>
+  <span class="seg"><span class="live"></span><span id="railTopic">BRAC UNIVERSITY</span></span>
   <span class="sep"></span>
   <span class="seg">BRACU MONGOL-TORI · URC 2026</span>
   <span class="spacer"></span>
@@ -742,24 +746,9 @@ em{font-style:normal;color:var(--amber)}
 <div id="help"><kbd>←</kbd> <kbd>→</kbd> slides · <kbd>N</kbd> notes · <kbd>T</kbd> timer · <kbd>F</kbd> full screen</div>
 
 <div id="notes" aria-live="polite">
-  <div class="nhead"><span class="t" id="nTitle">Slide 1</span><span class="g" id="nTime">0:00 – 0:30</span><span class="g">Press N to hide</span></div>
+  <div class="nhead"><span class="t" id="nTitle">Slide 1</span><span class="g" id="nTime">0:00 – 0:25</span><span class="g">Press N to hide</span></div>
   <div class="nbody" id="nBody"></div>
 </div>
-
-<style>
-.fusebox{border:1px solid var(--line);border-left:2px solid var(--teal);background:var(--panel);padding:9px 13px;border-radius:2px}
-.fusebox .fk{display:block;font-family:var(--f-mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
-.fusebox .fv{display:block;font-size:13.5px;color:var(--ink-3);margin-top:2px;line-height:1.3}
-.stagebox{border:1px solid var(--line);background:var(--panel-2);border-radius:2px;padding:15px 15px 16px;height:100%;display:flex;flex-direction:column;gap:7px}
-.stagebox .sk{font-family:var(--f-display);font-weight:700;text-transform:uppercase;font-size:23px;color:var(--amber);line-height:1}
-.stagebox .sv{font-size:14.5px;line-height:1.42;color:var(--ink-2);margin:0}
-.stagebox .mono{font-family:var(--f-mono);font-size:12.5px;color:var(--ink)}
-.arrow{display:flex;align-items:center;justify-content:center;color:var(--vermilion);font-size:22px}
-.drawline{animation:draw 1.5s cubic-bezier(.3,.7,.3,1) .35s forwards}
-@keyframes draw{to{stroke-dashoffset:0}}
-.pts{animation:fade .6s ease 1.5s both}
-@media (prefers-reduced-motion:reduce){.drawline{animation-duration:.01ms}.pts{animation-delay:0ms}}
-</style>
 
 <script>
 (function(){
@@ -777,17 +766,14 @@ em{font-style:normal;color:var(--amber)}
   var nBody = document.getElementById('nBody');
   var i = 0, total = slides.length;
 
-  /* ---- speaker notes: 8 minutes, cumulative ---- */
   var NOTES = {{NOTES}};
 
-  /* ---- scale the fixed stage to the viewport ---- */
   function fit(){
     var s = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
     stage.style.transform = 'scale(' + s + ')';
   }
   window.addEventListener('resize', fit); fit();
 
-  /* ---- progress ticks ---- */
   slides.forEach(function(_, n){
     var b = document.createElement('button');
     b.type = 'button';
@@ -822,7 +808,6 @@ em{font-style:normal;color:var(--amber)}
   function next(){ go(i+1); }
   function prev(){ go(i-1); }
 
-  /* ---- mission elapsed time ---- */
   var t0 = 0, running = false;
   function startClock(){ if(running) return; running = true; t0 = Date.now(); tick(); }
   function stopClock(){ running = false; }

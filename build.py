@@ -20,19 +20,33 @@ IMG_SRC = ROOT / "images"
 ASSETS = ROOT / "assets"
 BUILD = ROOT / "build"
 
-# slide role -> source photo in images/
+# slide role -> (source photo, longest edge in px)
+# full-bleed backgrounds get the larger budget; inset photos need much less
 IMAGES = {
-    "IMG_HERO": "WhatsApp Image 2026.28.20 PM.jpeg",            # rover + lander, wide -> title
-    "IMG_TEAM": "WhatsApp Image 2026-08-13 PM.jpeg",            # team at the MDRS sign -> who we are
-    "IMG_LANDER": "WhatsApp Image 2026-08-13 at 2.28.20 PM.jpeg",  # working at the lander -> the competition
-    "IMG_ROVER": "WhatsApp Image 2 at 2.28.21 PM.jpeg",         # rover 3/4, arm up -> meet Taurus
-    "IMG_ARM": "WhatsApp Image t 2.28.22 PM.jpeg",              # gripper close-up -> the arm
-    "IMG_MAST": "WhatsA2026-08-13 at 2.28.21 PM.jpeg",          # antenna mast -> antennas
-    "IMG_WIDE": "WhatsApp Image 2026-08-13 at 2.M.jpeg",        # wide sky -> close
+    "IMG_HERO":       ("images/WhatsApp Image 2026.28.20 PM.jpeg", 1280),          # title
+    "IMG_LANDER":     ("images/WhatsApp Image 2026-08-13 at 2.28.20 PM.jpeg", 1280),  # the four missions
+    "IMG_WIDE":       ("images/WhatsApp Image 2026-08-13 at 2.M.jpeg", 1280),      # close
+    "IMG_TEAM":       ("images/WhatsApp Image 2026-08-13 PM.jpeg", 900),           # who we are
+    "IMG_ASTRONAUT":  ("astonoute/austronaute-visit.jpg", 1280),                   # the visit
+    "IMG_NAVY":       ("astonoute/navy-visit", 1000),                              # drones
+    "IMG_SATEL":      ("astonoute/satel.jpg", 800),                                # the radio link
+    "IMG_COMPLETECH": ("astonoute/complitech-and-our-mongotori-enginer-workingon-customcantenan-degine.jpg", 900),
+    "IMG_SCHOOL":     ("astonoute/school-outrich.jpg", 900),                       # outreach
+    "IMG_KID":        ("astonoute/youne-student-curicity.jpg", 700),               # outreach
+    "IMG_CROWD":      ("astonoute/outreach.jpg", 700),                             # outreach
 }
 
-# a projected slide never needs more than this; keeps the whole deck under ~4 MB
-MAX_PX = 1280
+# graphics that are already the right size — inlined as-is
+FILES = {
+    "LOGO_MARK":     ("assets/logo-mark.png", "image/png"),
+    "ROVER_DIAGRAM": ("assets/rover-diagram.png", "image/png"),
+    "ADVISOR":       ("assets/advisor.jpg", "image/jpeg"),
+    "P_SATEL":       ("assets/partner-satel.png", "image/png"),
+    "P_SBG":         ("assets/partner-sbg.png", "image/png"),
+    "P_MYACTUATOR":  ("assets/partner-myactuator.png", "image/png"),
+    "P_COMPLETECH":  ("assets/partner-completech.png", "image/png"),
+}
+
 QUALITY = 66
 
 HEAD = """<!doctype html>
@@ -42,8 +56,8 @@ HEAD = """<!doctype html>
 """
 
 
-def optimise(token: str, filename: str) -> pathlib.Path:
-    src = IMG_SRC / filename
+def optimise(token: str, rel: str, max_px: int) -> pathlib.Path:
+    src = ROOT / rel
     if not src.exists():
         sys.exit(f"missing photo for {token}: {src}")
     BUILD.mkdir(exist_ok=True)
@@ -51,7 +65,7 @@ def optimise(token: str, filename: str) -> pathlib.Path:
     if out.exists() and out.stat().st_mtime >= src.stat().st_mtime:
         return out
     subprocess.run(
-        ["magick", str(src), "-auto-orient", "-resize", f"{MAX_PX}x{MAX_PX}>", "-strip",
+        ["magick", str(src), "-auto-orient", "-resize", f"{max_px}x{max_px}>", "-strip",
          "-sampling-factor", "4:2:0", "-quality", str(QUALITY),
          "-define", "jpeg:dct-method=float", "-interlace", "JPEG", str(out)],
         check=True,
@@ -59,8 +73,8 @@ def optimise(token: str, filename: str) -> pathlib.Path:
     return out
 
 
-def data_uri(path: pathlib.Path) -> str:
-    return "data:image/jpeg;base64," + base64.b64encode(path.read_bytes()).decode()
+def data_uri(path: pathlib.Path, mime: str = "image/jpeg") -> str:
+    return f"data:{mime};base64," + base64.b64encode(path.read_bytes()).decode()
 
 
 def sponsor_svg() -> str:
@@ -83,8 +97,14 @@ def main() -> int:
     html = (ROOT / "deck.src.html").read_text(encoding="utf8")
     html = html.replace("/*{{FONTS}}*/", (ASSETS / "fonts.css").read_text(encoding="utf8"), 1)
 
-    for token, filename in IMAGES.items():
-        html = html.replace("{{" + token + "}}", data_uri(optimise(token, filename)))
+    for token, (rel, max_px) in IMAGES.items():
+        html = html.replace("{{" + token + "}}", data_uri(optimise(token, rel, max_px)))
+
+    for token, (rel, mime) in FILES.items():
+        path = ROOT / rel
+        if not path.exists():
+            sys.exit(f"missing asset for {token}: {path}")
+        html = html.replace("{{" + token + "}}", data_uri(path, mime))
 
     notes = json.loads((ROOT / "notes.json").read_text(encoding="utf8"))
     html = html.replace("{{NOTES}}", json.dumps(notes, ensure_ascii=False), 1)

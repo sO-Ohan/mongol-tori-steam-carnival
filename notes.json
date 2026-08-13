@@ -2,81 +2,81 @@
   {
     "h": "Title",
     "t": "0:00 – 0:25  ·  25s",
-    "b": "<p class='say'>\"Assalamu alaikum. We're BRACU Mongol-Tori. This May we finished seventh in the world at the University Rover Challenge, in the Utah desert — and I want to spend the next eight minutes on <em>how</em>, not on the trophy.\"</p><ul><li>Say the team name in Bangla once — মঙ্গল তরী, Mars Chariot. It lands with this crowd.</li><li>Don't read the slide. Let the photo do the work.</li></ul>"
+    "b": "<p class='say'>\"Assalamu alaikum. We are BRACU Mongol-Tori, from BRAC University. We have been building Mars rovers for eleven years, and this May our rover finished seventh in the world.\"</p><ul><li>Say the name in Bangla once — মঙ্গল তরী, Mars Chariot.</li><li>Then set up the talk: \"I want to show you how we build, not just where we placed.\"</li><li>Don't read the slide. Let the photo hold the room.</li></ul>"
   },
   {
     "h": "Who we are",
     "t": "0:25 – 1:00  ·  35s",
-    "b": "<p class='say'>\"We started in 2015. Before the rover, BRAC students built Onnesha, the country's first nanosatellite, and Chondrobot, a lunar excavator. Mongol-Tori is the third thing in that line — and it is still 100% student-run.\"</p><ul><li>Emphasise the handover: seniors graduate every year, juniors inherit the lab. That's the hard part of a student team, not the engineering.</li><li>Name-check Dr. Khalilur Rhaman.</li></ul>"
+    "b": "<p class='say'>\"We started in 2015. Everyone on the team is a student — six subsystems, from mechanical to astrobiology. Every year seniors graduate, so half our job is teaching the next batch before we leave.\"</p><ul><li>That handover point lands with a student audience. Say it plainly.</li><li>Name Dr. Khalilur Rhaman and the Onnesha connection — one sentence, then move.</li></ul>"
   },
   {
-    "h": "The competition",
-    "t": "1:00 – 1:40  ·  40s",
-    "b": "<p class='say'>\"Four missions, thirty minutes each. The key rule: the operator sits in a tent and cannot see the rover. Every design decision after this slide comes from that one constraint.\"</p><ul><li>116 → 38 → 7th. Say the funnel out loud; the numbers do the bragging so you don't have to.</li><li>If the audience has rover people, they know the missions — go fast here.</li></ul>"
+    "h": "Why we do it",
+    "t": "1:00 – 1:35  ·  35s",
+    "b": "<p class='say'>\"We are two things at the same time. A research group, and a competition team.\"</p><ul><li><strong>Research:</strong> the real problem is a machine knowing where it is without being told. Same problem in rovers and drones, and useful here in Bangladesh, not only on Mars.</li><li><strong>Competition:</strong> a fixed date, a written spec, and judges who don't care how hard it was. If it doesn't work that day, we score zero.</li><li>Finish on the last line — most of us joined because a senior showed us a rover once. It sets up the outreach slide later.</li></ul>"
   },
   {
-    "h": "The climb",
-    "t": "1:40 – 2:20  ·  40s",
-    "b": "<p class='say'>\"This is our ranking since 2018. I'm showing you the whole line, including 2024, when we came 21st.\"</p><ul><li><strong>Own the dip.</strong> An engineering audience trusts the presenter who shows the bad year.</li><li>Point at 2024: \"Nothing exploded. Everything was just slightly worse than it needed to be. That's what a bad year actually looks like.\"</li><li>Then: \"8th, then 7th — same core people, two years of <em>not</em> restarting the design from scratch.\"</li></ul>"
+    "h": "The four missions",
+    "t": "1:35 – 2:10  ·  35s",
+    "b": "<p class='say'>\"Four missions, thirty minutes each. The rule that shapes everything: the driver sits in a tent and cannot see the rover.\"</p><ul><li>Science, delivery, servicing, autonomy — one line each, keep it moving.</li><li>116 teams → 38 finalists → 7th. Say the funnel out loud.</li><li>Rover people in the room already know this. Read the room and speed up if they do.</li></ul>"
+  },
+  {
+    "h": "Results",
+    "t": "2:10 – 2:55  ·  45s",
+    "b": "<p class='say'>\"This is every year we have competed — Utah in orange, the International Rover Challenge in India in blue.\"</p><ul><li>Don't hide 2024 — 21st. \"Nothing exploded. Everything was just a little worse than it needed to be.\"</li><li>Then the two stories at the bottom: <strong>2023, the circuit burned</strong> and the team rebuilt it in four hours in a remote camp. <strong>2024, the chassis broke</strong> mid-run and was fixed in six hours with what was in the pit box.</li><li>Land it: \"None of these were clean years. The scores came anyway.\"</li></ul>"
   },
   {
     "h": "Bangladesh at URC",
-    "t": "2:20 – 2:50  ·  30s",
-    "b": "<p class='say'>\"Three of the world's top eleven rovers were built in Dhaka. UIU came third — the best any Asian team has ever done. MIST came eleventh. Five Bangladeshi teams reached the finals; no country except the US sent more.\"</p><ul><li>This is the slide for the other rover teams in the room. Say the last line slowly and mean it: <strong>we're all competing with Utah, not with each other.</strong></li><li>If UIU or MIST people are present, look at them.</li></ul>"
+    "t": "2:55 – 3:20  ·  25s",
+    "b": "<p class='say'>\"Three of the world's top eleven rovers were built in Dhaka. UIU third, us seventh, MIST eleventh. Five Bangladeshi teams reached the finals — only the US sent more.\"</p><ul><li>This slide is for the other teams in the room. If UIU or MIST people are here, look at them.</li><li>Last line slowly: we are all competing with Utah, not with each other.</li></ul>"
   },
   {
     "h": "Meet Taurus",
-    "t": "2:50 – 3:20  ·  30s",
-    "b": "<p class='say'>\"This is Taurus. One chassis that has to drill rock, plug a cable into a socket, climb a hill, and then find its own way back with nobody driving.\"</p><ul><li>Fast slide — it's a table of contents for the next five.</li><li>Flag the last line: three radio bands live at once. That's the thread you'll pull on shortly.</li></ul>"
+    "t": "3:20 – 3:55  ·  35s",
+    "b": "<p class='say'>\"This is Taurus, this year's rover. One machine that has to drill rock, plug in a cable, climb a hill and drive itself home.\"</p><ul><li>Use the drawing — point at the antenna mast, the arm axes, the rocker-bogie, the airless wheels.</li><li>Don't go deep. This is the map for the next four slides, not the tour.</li></ul>"
   },
   {
-    "h": "Structure & mobility",
-    "t": "3:20 – 3:50  ·  30s",
-    "b": "<p class='say'>\"Four-wheel rocker-bogie, steel skeleton, aluminium electronics bay, TPU grips we print ourselves. All of it FEA'd at peak load before anything was cut.\"</p><ul><li>The tapered roller bearing detail is for the mechanical engineers: radial <em>and</em> axial load when turning on a slope.</li><li>End on the red number: <strong>we failed the rain test at five minutes.</strong> Say it plainly. That single admission buys you the room's trust for the rest of the talk.</li></ul>"
+    "h": "The radio link",
+    "t": "3:55 – 4:45  ·  50s",
+    "b": "<p class='say'>\"First breakthrough: the radio link. Three bands at once, so losing one doesn't end the run.\"</p><ul><li><strong>433 MHz SATEL</strong> for driving commands — narrow channel, slow, but it gets through hills. Verified 1.2 km.</li><li><strong>5.8 GHz</strong> for video and data. <strong>2.4 GHz</strong> as backup — we tested it by switching the main link off mid-run and kept driving.</li><li><strong>Say this clearly:</strong> those distances are with hills in the way. In open line of sight it goes very much further. We quote the worst case because the competition is the worst case.</li><li>Slow down here — this is the technical heart of the talk.</li></ul>"
   },
   {
-    "h": "The arm",
-    "t": "3:50 – 4:20  ·  30s",
-    "b": "<p class='say'>\"Seven degrees of freedom, and one cheat: the whole arm rides on a linear rail. Reach goes up, inertia doesn't.\"</p><ul><li>Worm gear on the base — can't be back-driven, holds position with the power off. Engineers nod at this one.</li><li>Close with the framing: \"Servicing tasks are a millimetre problem solved from a kilometre away.\" That hands you the comms slide.</li></ul>"
-  },
-  {
-    "h": "The link (comms)",
-    "t": "4:20 – 5:10  ·  50s",
-    "b": "<p class='say'>\"Here's the part I actually want to talk about. Three bands, because one band is a single point of failure.\"</p><ul><li><strong>433 MHz SATEL SATELLINE-EASy</strong> — command and telemetry, 25 kHz narrowband, verified past 1.2 km. Narrow channel, low data rate, gets through terrain.</li><li><strong>5.8 GHz Ubiquiti Rocket AC</strong>, 2×2 MIMO — primary data and vision, 40 MHz channel, over 900 m non-line-of-sight at −76 dBm.</li><li><strong>2.4 GHz Bullet AC</strong> — standby failover on the same mast.</li><li>Punchline: \"We tested the failover by switching off the primary link mid-run. The rover kept driving.\"</li><li>Slow down here. This is your most technical slide and the reason you were invited.</li></ul>"
-  },
-  {
-    "h": "The antennas / CompleTech",
-    "t": "5:10 – 5:50  ·  40s",
-    "b": "<p class='say'>\"A radio's datasheet range was measured somewhere that isn't Bangladesh. So we sat down with the engineers at CompleTech — the Finnish antenna house behind ComAnt — and did it properly.\"</p><ul><li>Walk the four steps: simulate our own ground → design antennas to those simulations → 2×2 MIMO omni on the rover, sector at base, Miniflex for 433 → measure it in the field.</li><li>SATEL gave the radios. SBG Systems gave the inertial unit. CompleTech tuned the antennas.</li><li><strong>The takeaway for this room:</strong> every one of those relationships started with a student sending a technical email. Say \"Ask.\" and pause.</li></ul>"
+    "h": "The antennas",
+    "t": "4:45 – 5:25  ·  40s",
+    "b": "<p class='say'>\"Second breakthrough: we stopped using the antennas that came in the box.\"</p><ul><li>The datasheet range was measured somewhere that isn't our field. So we contacted CompleTech in Finland and asked.</li><li>We simulated our own test ground, their engineers designed antennas for that case, then we measured the real range instead of trusting a number.</li><li>The point for this room: they had no reason to help a student team in Dhaka. They helped because the question was specific. Pause after that.</li></ul>"
   },
   {
     "h": "Autonomy",
-    "t": "5:50 – 6:35  ·  45s",
-    "b": "<p class='say'>\"Four sensors that lie in different directions. GNSS drifts, wheels slip, the IMU integrates its own error, stereo depth hates featureless sand. So none of them gets to be right on its own.\"</p><ul><li>Left to right: SBG inertial + GNSS (weighted by HDOP) + ZED 2i stereo + ArUco markers → EKF → AMCL seeded by a 360° sweep, then NDT scan-matching → Nav2 with a DWA local planner.</li><li>The one number: every validated ArUco detection resets accumulated dead-reckoning drift to centimetre level.</li><li>All onboard on a Jetson Orin Nano, in ROS 2, validated in a Unity sim before it touches hardware.</li></ul>"
+    "t": "5:25 – 6:00  ·  35s",
+    "b": "<p class='say'>\"Third: knowing where you are. Four sensors, each wrong in a different way.\"</p><ul><li>GPS wanders. Wheels slip. The IMU drifts. Stereo cameras get lost on flat sand.</li><li>An SBG Systems inertial unit, GNSS, a stereo camera and ArUco markers go into one filter — one position, one map, one path.</li><li>All onboard on a Jetson. We test in simulation first: a bug in software costs an afternoon, a bug in the desert costs a mission.</li></ul>"
   },
   {
-    "h": "Power & safety",
+    "h": "Our own boards",
+    "t": "6:00 – 6:35  ·  35s",
+    "b": "<p class='say'>\"Fourth: the parts we couldn't buy, we made.\"</p><ul><li><strong>Kacchim</strong> — our controller board, sits between the computer and everything that moves. Motors, sensors, science payload, wireless emergency stop. One board across the rover means one spare to carry.</li><li><strong>Power board</strong> — one plug-in card per voltage. A rail dies in the pit, you swap the card instead of rewiring the rover. Above 95% efficient.</li><li>Then MyActuator: where we do buy, we buy well, and they back the team.</li></ul>"
+  },
+  {
+    "h": "Drones and the Navy",
     "t": "6:35 – 7:05  ·  30s",
-    "b": "<p class='say'>\"Our power distribution board is a backplane with one hot-swappable card per rail. GaN FETs, 95% efficiency, eFuse on every rail, live current telemetry to the base station.\"</p><ul><li>Hot-swap matters in the pits: \"a rail dies, you pull the card and push in a spare, at night, with a head torch.\"</li><li>Two kill switches, deliberately identical circuits, so one spare part fixes either.</li><li>Land the closing line: buying a PDB is faster; building one is why we can debug it at 2 a.m.</li></ul>"
+    "b": "<p class='say'>\"We build drones as well. Ours flies ahead of the rover during a mission and looks at ground the rover cannot see yet — on the same radio network.\"</p><ul><li>Same navigation problem, solved once, used twice.</li><li>The Bangladesh Navy came to the lab to see it. Students explained it to them across a table — which is how most things here start.</li></ul>"
   },
   {
-    "h": "Science payload",
-    "t": "7:05 – 7:30  ·  25s",
-    "b": "<p class='say'>\"The science mission is looking for signs of life — with an auger, a load cell and a pH probe.\"</p><ul><li>Acquire → contain → measure → assay. Four beats, one sentence each. Don't linger.</li><li>Mention Kacchim by name: our own control board runs the actuators for both the science payload and the rest of the rover. One board to learn, one board to fix.</li></ul>"
+    "h": "Outreach",
+    "t": "7:05 – 7:45  ·  40s",
+    "b": "<p class='say'>\"For eleven years we have been taking the rover into school grounds and putting the controller in a child's hands.\"</p><ul><li>Slow down here. This is the part of the talk people remember.</li><li>Point at the girl with the controller. \"That is a whole afternoon of our weekend, and it is the best thing we do.\"</li><li>Close it: a child who has driven a rover stops thinking engineering happens in other countries.</li></ul>"
   },
   {
-    "h": "Debrief",
-    "t": "7:30 – 8:05  ·  35s",
-    "b": "<p class='say'>\"If you're starting a team today, here's what eight years cost us to learn.\"</p><ul><li>Read the four headlines only — the sub-text is for the photo people take of the slide.</li><li>Number three is the one to sell in this room: <strong>industry will pick up the phone.</strong></li><li>Number four saves teams their season: half the teams that never reach Utah are eliminated on paper.</li></ul>"
+    "h": "The astronaut visit",
+    "t": "7:45 – 8:15  ·  30s",
+    "b": "<p class='say'>\"An astronaut came to our lab. He didn't come to see a famous laboratory. He came to see a bunch of students who love solving engineering problems, standing next to a rover they built themselves.\"</p><ul><li>Let the photo sit for a beat before you speak.</li><li>This is the emotional close — deliver it slowly, then go to partners.</li></ul>"
   },
   {
     "h": "Partners",
-    "t": "8:05 – 8:25  ·  20s",
-    "b": "<p class='say'>\"None of this happens on a student budget. Twenty-three companies put something real behind this rover.\"</p><ul><li>Don't read the logos. Name three that gave engineering, not just money: CompleTech, SATEL, SBG Systems.</li><li>If a potential sponsor is in the room, this is the moment to look up and say you're always open to another one.</li></ul>"
+    "t": "8:15 – 8:35  ·  20s",
+    "b": "<p class='say'>\"None of this happens on a student budget. Twenty-three companies and organisations back this team.\"</p><ul><li>Don't read logos. Name the three that gave engineering time, not just money: CompleTech, SATEL, SBG Systems.</li><li>If a potential sponsor is in the room, look up here and say you are always open to one more.</li></ul>"
   },
   {
     "h": "Close",
-    "t": "8:25 – 8:40  ·  15s",
-    "b": "<p class='say'>\"Mongol Tori means Mars Chariot. Come find us after this — ask us anything: link budgets, gear ratios, what we broke, what it cost. We'd rather Bangladesh had ten good rover teams than one. Thank you.\"</p><ul><li>Stop talking. Take questions.</li><li>Likely questions: total cost / how do you get sponsors / how do you handle graduation turnover / why 433 MHz over LoRa / why not RTK GNSS.</li></ul>"
+    "t": "8:35 – 8:50  ·  15s",
+    "b": "<p class='say'>\"Mongol Tori means Mars Chariot. Come and talk to us after this — ask what it cost, what broke, how to start your own team. We would rather Bangladesh had ten good rover teams than one. Thank you.\"</p><ul><li>Stop. Take questions.</li><li>Likely questions: total cost · how to get sponsors · how you handle graduation turnover · why 433 MHz · how to start a team at their university.</li></ul>"
   }
 ]

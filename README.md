@@ -39,9 +39,17 @@ your laptop and on the venue projector. Nothing reflows.
 | `notes.json` | Speaker notes + per-slide timings. Feeds both the in-deck panel and `SCRIPT.md`. |
 | `SCRIPT.md` | Printable speaker script, 8 min 40 s target. |
 | `build.py` | Inlines fonts, photos and the sponsor SVG into both outputs. |
-| `assets/` | Font faces as data URIs, and the sponsor-wall SVG. |
-| `images/` | Original URC 2026 photos. |
+| `assets/` | Font faces, the sponsor-wall SVG, the logo mark, the annotated rover drawing, the advisor photo, and four partner logos cut out of the sponsor sheet. |
+| `images/` | URC 2026 photos from Utah. |
+| `astonoute/` | Lab and outreach photos — the astronaut visit, the Navy visit, SATEL radios, the CompleTech call, school visits. |
 | `build/` | Optimised JPEGs, cached between builds. Not committed. |
+
+## Running order
+
+1. Title · 2. Who we are · 3. Why we do it (research + competition) · 4. The four missions ·
+5. Results, URC and IRC · 6. Bangladesh at URC 2026 · 7. Meet Taurus · 8. The radio link ·
+9. The antennas, with CompleTech · 10. Autonomy · 11. Our own boards · 12. Drones and the Navy ·
+13. Outreach · 14. The astronaut visit · 15. Partners · 16. Close
 
 ## Rebuilding and redeploying
 
