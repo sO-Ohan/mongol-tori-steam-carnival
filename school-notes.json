@@ -1,0 +1,87 @@
+[
+  {
+    "h": "Title",
+    "t": "0:00 – 1:00  ·  60s",
+    "b": "<p class='say'>\"Assalamu alaikum. We are Mongol Tori — মঙ্গল তরী, the Mars Chariot. We build Mars rovers at BRAC University, and this year ours finished seventh in the world.\"</p><ul><li>Say the Bangla name first, loudly. It is their name too.</li><li>Then the line that matters: <strong>\"every person on this team is a student.\"</strong></li><li>Do not read the slide. Let the photo do the work for a beat.</li></ul><p class='do'>ASK THE ROOM: \"Hands up — who here has ever opened up something to see what was inside?\" Wait for the hands. Tell them that is the entire job.</p>"
+  },
+  {
+    "h": "The astronaut",
+    "t": "1:00 – 2:00  ·  60s",
+    "b": "<p class='say'>\"This is an astronaut. He has been to space. He came to Dhaka, walked into our lab, and asked us how our robot works.\"</p><ul><li>Silence for two seconds before you speak. Let them look at the flight suit.</li><li>Point at the student doing the explaining: <strong>\"that is a student. Same age as your older brother or sister.\"</strong></li><li>Land it: \"Nobody in this photo was famous. They just built something worth flying across the world to see.\"</li></ul>"
+  },
+  {
+    "h": "Who we are",
+    "t": "2:00 – 3:10  ·  70s",
+    "b": "<p class='say'>\"In 2015 a few students decided to build a Mars rover. They had never built one. Nobody had shown them how.\"</p><ul><li>Six sub-teams: metal, electronics, code, radios, biology, self-driving. Say them fast — the point is the variety, not the list.</li><li>For the students who do not like maths: <strong>there is a job on this team for a biologist, an artist and a writer too.</strong></li><li>Finish on the amber line: you start with curiosity, not with skill.</li></ul>"
+  },
+  {
+    "h": "This is not Mars",
+    "t": "3:10 – 4:10  ·  60s",
+    "b": "<p class='say'>\"Look at this place. It is not Mars — it is a desert in Utah, in America. It is the closest thing to Mars we have on Earth.\"</p><ul><li>116 teams entered. 38 got to the desert. We finished 7th. Say the funnel slowly, one number at a time.</li><li>Worth saying out loud: <strong>teams from Bangladesh beat teams from countries with space agencies.</strong></li></ul><p class='do'>ASK: \"How far away do you think Mars is?\" Take two guesses before you move on — then tell them it changes, because both planets keep moving.</p>"
+  },
+  {
+    "h": "Why robots go first",
+    "t": "4:10 – 5:20  ·  70s",
+    "b": "<p class='say'>\"Why send a robot at all? Because Mars will kill you in about fifteen seconds.\"</p><ul><li>Minus sixty degrees. No air you can breathe. A message takes up to twenty minutes to get there — so you cannot shout \"stop!\" and expect it to help.</li><li><strong>Be clear that these four numbers are Mars, not Utah</strong> — you were standing in Utah one slide ago. The last line of the slide does the switch for you: Utah in June is about +35 °C, and that is where we actually test.</li><li>If anyone asks: −60 °C is the NASA average for Mars; it swings from about +20 °C to −153 °C.</li><li>The last number is the important one: <strong>zero mechanics.</strong> Whatever you send has to look after itself.</li><li>Bridge to the rover: \"So it has to be a machine that can think a little on its own. That is what we build.\"</li></ul>"
+  },
+  {
+    "h": "Meet Taurus",
+    "t": "5:20 – 6:40  ·  80s",
+    "b": "<p class='say'>\"This is Taurus, this year's rover. About as heavy as two of you, and it has to do four completely different jobs.\"</p><ul><li>Walk the four cards with your hand on the screen: ears, arm, brain, wheels. One sentence each.</li><li>The wheels always get a reaction: <strong>no air inside them, so there is nothing to puncture.</strong></li><li>Do not go deeper than the four labels. Detail is for the questions afterwards.</li></ul><p class='do'>IF YOU BROUGHT THE ROVER: stop here, go outside, and come back for the rest. This slide is the natural break.</p>"
+  },
+  {
+    "h": "The four jobs",
+    "t": "6:40 – 7:50  ·  70s",
+    "b": "<p class='say'>\"Four missions, thirty minutes each. Dig. Deliver. Repair. Think.\"</p><ul><li>Dig — soil, tested on the spot, for signs that something once lived.</li><li>Deliver — find a toolbox, pick it up, carry it over rocks to an astronaut.</li><li>Repair — switches, valves and cables, with a robot hand, on a broken lander.</li><li>Think — drive to a point on a map and back with nobody steering.</li><li>Keep it moving. This slide is a list; the next one is the story.</li></ul>"
+  },
+  {
+    "h": "The hardest rule",
+    "t": "7:50 – 9:00  ·  70s",
+    "b": "<p class='say'>\"Here is the rule that makes it hard. The driver is not allowed to see the rover. They sit in a tent, a kilometre away, and drive it through one camera.\"</p><ul><li><strong>Move your mouse.</strong> The bright circle is all the driver gets — the rest of the desert is invisible to them. Hunt around the slide for a second; the room will lean in.</li><li>Say it plainly: \"Imagine driving a car looking only through a straw. That is the competition.\"</li><li>Every design decision in this talk comes from this one rule.</li></ul><p class='do'>ASK: \"Would you rather drive it, or be the one who wrote the code so it drives itself?\" Both answers are the right answer — that is the point.</p>"
+  },
+  {
+    "h": "Radio",
+    "t": "9:00 – 10:00  ·  60s",
+    "b": "<p class='say'>\"So how does the rover hear us? The same way a radio hears a station — invisible waves, right through the air, right through a hill.\"</p><ul><li>Three radios at once. One of them <em>will</em> fail on the day. The other two bring the rover home.</li><li>1.2 km with hills in the way — that is our worst case, and the worst case is what we quote.</li><li>Get their hands up: they are standing in radio waves right now and cannot feel a thing.</li></ul>"
+  },
+  {
+    "h": "Driving itself",
+    "t": "10:00 – 11:20  ·  80s",
+    "b": "<p class='say'>\"Close your eyes and try to walk to the door of this room. You would count steps, feel the wall, guess. That is exactly what the rover does.\"</p><ul><li>Four senses, each one wrong in its own way: GPS wanders, wheels spin on sand, the balance sensor drifts, cameras get confused on flat ground.</li><li>The computer listens to all four and decides who to trust.</li><li>Land the last line — <strong>\"four imperfect answers, one good one — that is most of engineering.\"</strong></li></ul><p class='do'>OPTIONAL: pick one student, ask them to close their eyes and point at the door. They will be a little off. That is drift.</p>"
+  },
+  {
+    "h": "Make it or ask",
+    "t": "11:20 – 12:30  ·  70s",
+    "b": "<p class='say'>\"The main circuit board of the rover did not exist anywhere, so we designed it ourselves. We call it Kacchim.\"</p><ul><li>Then the antenna story: the ones we could buy were not good enough, so we wrote to a company in Finland — strangers, seven thousand kilometres away, with no reason at all to answer a student email.</li><li><strong>They answered.</strong> Pause there. This is the most useful lesson in the talk for a fifteen-year-old.</li><li>\"The worst thing that happens when you ask is nothing.\"</li></ul>"
+  },
+  {
+    "h": "It breaks",
+    "t": "12:30 – 13:40  ·  70s",
+    "b": "<p class='say'>\"Now the part nobody puts on Facebook. This thing breaks constantly.\"</p><ul><li>2023: the main circuit burned out in a desert camp, hours from any shop — rebuilt by hand in four hours.</li><li>2024: the body snapped in the middle of a mission, in front of the judges — fixed in six hours with what was in the toolbox.</li><li>Say the closing line straight to the students at the back: <strong>if your project fails, you are not bad at this, you are doing it.</strong></li></ul>"
+  },
+  {
+    "h": "The scoreboard",
+    "t": "13:40 – 14:40  ·  60s",
+    "b": "<p class='say'>\"This is every year we have competed. Look at the shape of it — it goes down as often as it goes up.\"</p><ul><li>Trace the whole line with your hand. Do not stop on any one year and do not call a year the bad one — those were real people, and a dip is an accident on the day, not a measure of the batch.</li><li>If a student asks about the low point, answer kindly and generally: <strong>\"a part failed during a run. It happens to every team, and the ones who come back are the ones who stayed.\"</strong></li><li>Then go straight to the recovery: seventh in the world, out of 116 teams.</li></ul>"
+  },
+  {
+    "h": "Drones",
+    "t": "14:40 – 15:30  ·  50s",
+    "b": "<p class='say'>\"We build drones as well. Ours flies ahead of the rover and reports back what is over the hill.\"</p><ul><li>The point to make: solve the hard problem once — knowing where you are — and it works in the air and on the ground.</li><li>The Navy came to our lab to see it, and students did the explaining. Keep it short.</li></ul>"
+  },
+  {
+    "h": "Your turn",
+    "t": "15:30 – 16:40  ·  70s",
+    "b": "<p class='say'>\"And then we do this — we take the rover to a school ground and hand the controller to somebody your age.\"</p><ul><li>Slow right down. This is the slide they remember.</li><li>Point at each photo and name what is happening. The third one always gets a laugh — yes, it holds a person's weight.</li><li>Finish with why you are actually standing there: someone let us touch a robot once, and that is the only reason we are here.</li></ul>"
+  },
+  {
+    "h": "How to start",
+    "t": "16:40 – 18:10  ·  90s",
+    "b": "<p class='say'>\"You do not need a lab. You need five things, and you can start every one of them this week.\"</p><ul><li>Read the five headings only — open something broken, learn one skill properly, make it move, find two friends, enter something.</li><li>The one to dwell on is number three: <strong>the first time something you built moves on its own, you are done for.</strong></li><li>End on the amber card: ask the question. Tell them you answer every message a student sends.</li></ul><p class='do'>TELL THEM WHERE: name the school club, the teacher, or the contest they can actually join on Sunday. Vague inspiration fades by lunch.</p>"
+  },
+  {
+    "h": "Close",
+    "t": "18:10 – 19:00  ·  50s",
+    "b": "<p class='say'>\"মঙ্গল তরী — Mars Chariot. Come and ask us anything. What broke, what it cost, how to join, whether we have ever set something on fire. Yes, we have.\"</p><ul><li>Say <span class='bn'>তুমিও পারবে</span> out loud, in Bangla, and mean it.</li><li>Then stop talking and take questions — leave at least ten minutes.</li><li>Questions that always come: how much does it cost · how fast does it go · can it fly · did you meet aliens · what marks do I need to join a team like this.</li></ul>"
+  }
+]

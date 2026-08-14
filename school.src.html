@@ -1,0 +1,789 @@
+<meta charset="utf-8">
+<title>We Built a Mars Rover</title>
+<style>
+/*{{FONTS}}*/
+
+/* ============ TOKENS ============
+   Same Mars-dark palette as the main deck, but every type size is pushed up:
+   this one is read from the back row of a school hall, by children, in daylight. */
+:root{
+  --ground:#111010;
+  --panel:#1B1918;
+  --panel-2:#241F1D;
+  --line:rgba(246,241,236,.14);
+  --line-soft:rgba(246,241,236,.07);
+  --ink:#F6F1EC;
+  --ink-2:#C7BCB2;
+  --ink-3:#8B7F76;
+  --vermilion:#E64126;
+  --amber:#FC9D2D;
+  --teal:#2FA6A8;
+
+  --f-display:"Barlow Condensed",-apple-system,"Arial Narrow",sans-serif;
+  --f-body:"Barlow",-apple-system,Segoe UI,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --f-bn:"Noto Sans Bengali",var(--f-body);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:var(--f-body); overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ============ STAGE — fixed 1280x720 canvas, scaled to fit ============ */
+#viewport{position:fixed;inset:0;display:grid;place-items:center;background:var(--ground)}
+#stage{
+  width:1280px;height:720px;position:relative;overflow:hidden;
+  background:var(--ground);
+  transform-origin:center center;
+  box-shadow:0 0 0 1px var(--line-soft);
+}
+
+/* ============ SLIDE ============ */
+.slide{
+  position:absolute;inset:0;padding:56px 72px 78px;
+  opacity:0;visibility:hidden;pointer-events:none;transform:scale(1.012);
+}
+.slide.is-active{opacity:1;visibility:visible;pointer-events:auto;transform:none;z-index:2}
+#stage.ready .slide{
+  transition:opacity .5s ease, transform .7s cubic-bezier(.2,.7,.3,1), visibility 0s linear .5s;
+}
+#stage.ready .slide.is-active{
+  transition:opacity .5s ease, transform .7s cubic-bezier(.2,.7,.3,1), visibility 0s linear 0s;
+}
+.slide.bleed{padding:0}
+
+/* entrance choreography */
+.slide.is-active [data-anim]{animation:rise .58s cubic-bezier(.16,.84,.34,1) both;animation-delay:calc(var(--d,0)*80ms + 60ms)}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.slide.is-active [data-anim="fade"]{animation-name:fade}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.slide.is-active [data-anim="grow"]{animation:grow .9s cubic-bezier(.2,.7,.3,1) both;animation-delay:calc(var(--d,0)*80ms + 140ms)}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.slide.is-active [data-anim="pop"]{animation:pop .6s cubic-bezier(.2,1.5,.4,1) both;animation-delay:calc(var(--d,0)*80ms + 100ms)}
+@keyframes pop{from{opacity:0;transform:scale(.86)}to{opacity:1;transform:none}}
+.slide.is-active [data-anim="zoom"]{animation:zoom 16s ease-out both}
+@keyframes zoom{from{transform:scale(1.08)}to{transform:scale(1)}}
+
+/* photos reveal from behind a curtain rather than by clipping the bitmap */
+.slide.is-active .photo::before{animation:uncover .85s cubic-bezier(.4,.85,.2,1) both;animation-delay:calc(var(--d,0)*80ms + 120ms)}
+@keyframes uncover{from{transform:scaleY(1)}to{transform:scaleY(0)}}
+.slide.is-active .photo img{animation:photoIn .9s cubic-bezier(.2,.7,.25,1) both;animation-delay:calc(var(--d,0)*80ms + 120ms)}
+@keyframes photoIn{from{opacity:0;transform:scale(1.05)}to{opacity:1;transform:scale(1)}}
+
+/* ============ TYPE — one step up from the main deck ============ */
+.eyebrow{
+  font-family:var(--f-mono);font-size:13px;font-weight:500;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--amber);margin:0;
+}
+.eyebrow .dim{color:var(--ink-3)}
+h1{font-family:var(--f-display);font-weight:700;text-transform:uppercase;
+   font-size:104px;line-height:.88;letter-spacing:-.01em;margin:0;text-wrap:balance}
+h2{font-family:var(--f-display);font-weight:700;text-transform:uppercase;
+   font-size:64px;line-height:.94;letter-spacing:-.005em;margin:0;text-wrap:balance}
+h3{font-family:var(--f-display);font-weight:600;text-transform:uppercase;
+   font-size:30px;line-height:1.05;letter-spacing:.02em;margin:0}
+.lead{font-size:27px;line-height:1.36;color:var(--ink);margin:0;max-width:44ch}
+.body{font-size:22px;line-height:1.42;color:var(--ink-2);margin:0;max-width:48ch}
+.tiny{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin:0}
+b,strong{color:var(--ink);font-weight:600}
+em{font-style:normal;color:var(--amber)}
+.bn{font-family:var(--f-bn);font-weight:600}
+.hl{color:var(--amber)}
+
+/* ============ SHARED PIECES ============ */
+.rule{
+  height:2px;border:0;margin:0;transform-origin:left center;
+  background:linear-gradient(90deg,var(--vermilion) 0%,var(--amber) 24%,rgba(246,241,236,.16) 62%,rgba(246,241,236,0) 100%);
+}
+.bignum, .stat .n{
+  background:linear-gradient(170deg,var(--ink) 30%,var(--amber) 130%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.glow{
+  position:absolute;pointer-events:none;border-radius:50%;
+  background:radial-gradient(circle,rgba(230,65,38,.17) 0%,rgba(230,65,38,.05) 45%,transparent 70%);
+  filter:blur(18px);animation:breathe 16s ease-in-out infinite;z-index:-1;
+}
+@keyframes breathe{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.18);opacity:1}}
+.head{display:flex;flex-direction:column;gap:14px}
+.cols{display:grid;gap:44px;height:100%}
+.stack{display:flex;flex-direction:column}
+
+.chip{
+  display:inline-flex;align-items:center;gap:9px;padding:8px 16px 7px;
+  border:1px solid var(--line);border-radius:2px;background:rgba(0,0,0,.32);
+  font-family:var(--f-mono);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);
+}
+.chip .dot{width:7px;height:7px;border-radius:50%;background:var(--vermilion)}
+
+/* big number tile */
+.stat{display:flex;flex-direction:column;gap:6px}
+.stat .n{font-family:var(--f-display);font-weight:700;font-size:88px;line-height:.84;font-variant-numeric:tabular-nums}
+.stat .n .u{font-size:34px;color:var(--amber);margin-left:3px}
+.stat .l{font-size:19px;line-height:1.3;color:var(--ink-2);max-width:20ch}
+
+/* card used for the "four jobs", "how to start" and answer boxes */
+.card{
+  border:1px solid var(--line);background:rgba(20,18,17,.86);border-radius:3px;
+  padding:20px 22px;display:flex;flex-direction:column;gap:9px;
+}
+.card .k{font-family:var(--f-display);font-weight:700;text-transform:uppercase;font-size:29px;line-height:1;color:var(--amber)}
+.card .v{font-size:18px;line-height:1.36;color:var(--ink-2);margin:0}
+.card .num{font-family:var(--f-mono);font-size:12px;letter-spacing:.16em;color:var(--ink-3)}
+
+/* photo frames */
+.photo{position:relative;overflow:hidden;background:#0b0a0a;border-radius:3px}
+.photo::before{
+  content:"";position:absolute;inset:0;z-index:3;pointer-events:none;
+  background:var(--ground);transform:scaleY(0);transform-origin:top;
+}
+.photo::after{
+  content:"";position:absolute;inset:0;pointer-events:none;border-radius:3px;
+  box-shadow:inset 0 0 0 1px rgba(246,241,236,.10), inset 0 -48px 44px -40px rgba(9,8,8,.55);
+}
+.photo img{width:100%;height:100%;object-fit:cover;display:block}
+.photo .cap{
+  position:absolute;left:0;bottom:0;right:0;padding:34px 18px 13px;
+  background:linear-gradient(to top,rgba(9,8,8,.94),rgba(9,8,8,0));
+  font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);
+}
+.bleed-img{position:absolute;inset:0}
+.bleed-img img{width:100%;height:100%;object-fit:cover;display:block}
+.scrim-l{position:absolute;inset:0;background:linear-gradient(100deg,rgba(12,11,11,.96) 0%,rgba(12,11,11,.88) 34%,rgba(12,11,11,.42) 62%,rgba(12,11,11,.25) 100%)}
+.scrim-b{position:absolute;inset:0;background:linear-gradient(to top,rgba(12,11,11,.97) 0%,rgba(12,11,11,.9) 32%,rgba(12,11,11,.5) 56%,rgba(12,11,11,.1) 82%)}
+.grain{position:absolute;inset:0;opacity:.35;mix-blend-mode:overlay;pointer-events:none;
+  background-image:radial-gradient(rgba(255,255,255,.08) .5px,transparent .5px);background-size:3px 3px}
+
+/* the "what the driver sees" slide — a torch beam that follows the pointer */
+#viewhole{
+  position:absolute;inset:0;pointer-events:none;z-index:3;
+  background:radial-gradient(circle 200px at var(--mx,760px) var(--my,360px),
+    rgba(9,8,8,0) 0%, rgba(9,8,8,0) 44%, rgba(9,8,8,.93) 74%, rgba(9,8,8,.99) 100%);
+}
+#viewring{
+  position:absolute;left:760px;top:360px;width:400px;height:400px;margin:-200px 0 0 -200px;
+  border:1px solid rgba(252,157,45,.5);border-radius:50%;pointer-events:none;z-index:4;
+}
+#viewring::after{
+  content:"CAM 1 · LIVE";position:absolute;left:50%;top:-26px;transform:translateX(-50%);
+  font-family:var(--f-mono);font-size:11px;letter-spacing:.18em;color:var(--amber);white-space:nowrap;
+}
+
+/* ============ TELEMETRY RAIL ============ */
+#rail{
+  position:absolute;left:0;right:0;bottom:0;height:46px;
+  border-top:1px solid var(--line-soft);
+  display:flex;align-items:center;padding:0 72px;
+  font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);
+  background:linear-gradient(to top,rgba(9,8,8,.9),rgba(9,8,8,.35));
+  z-index:5;
+}
+#rail .seg{display:flex;align-items:center;gap:10px}
+#rail .sep{width:1px;height:12px;background:var(--line);margin:0 16px}
+#rail .live{width:5px;height:5px;border-radius:50%;background:var(--vermilion);animation:blip 2.4s ease-in-out infinite}
+@keyframes blip{0%,100%{opacity:1}50%{opacity:.25}}
+#rail .spacer{flex:1}
+#railTopic{color:var(--ink-2)}
+#met{color:var(--amber);font-variant-numeric:tabular-nums}
+#counter{color:var(--ink-2);font-variant-numeric:tabular-nums}
+
+#ticks{position:absolute;left:0;right:0;bottom:46px;height:2px;display:flex;gap:2px;padding:0 72px;z-index:5}
+#ticks button{flex:1;height:2px;border:0;padding:0;background:var(--line);cursor:pointer;transition:background .25s}
+#ticks button:hover{background:var(--ink-3)}
+#ticks button.done{background:var(--vermilion)}
+#ticks button.now{background:var(--amber)}
+#ticks button:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+
+/* ============ NOTES PANEL ============ */
+#notes{
+  position:fixed;left:0;right:0;bottom:0;max-height:48vh;overflow:auto;z-index:40;
+  background:#0C0B0B;border-top:1px solid var(--vermilion);padding:18px 26px 22px;display:none;
+}
+#notes.open{display:block}
+#notes .nhead{display:flex;align-items:baseline;gap:16px;margin-bottom:10px}
+#notes .nhead .t{font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber)}
+#notes .nhead .g{font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+#notes .nbody{font-size:15.5px;line-height:1.55;color:var(--ink-2);max-width:100ch}
+#notes .nbody strong{color:var(--ink)}
+#notes .nbody ul{margin:8px 0 0;padding-left:18px}
+#notes .nbody li{margin:3px 0}
+#notes .say{color:var(--ink);border-left:2px solid var(--vermilion);padding-left:12px;margin:0 0 10px}
+#notes .do{color:var(--amber);border-left:2px solid var(--amber);padding-left:12px;margin:10px 0 0;font-size:15px}
+
+#help{
+  position:fixed;right:14px;top:12px;z-index:40;
+  font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);
+  background:rgba(12,11,11,.82);border:1px solid var(--line-soft);border-radius:2px;padding:7px 10px;transition:opacity .4s;
+}
+#help.hide{opacity:0}
+#help kbd{font:inherit;color:var(--amber)}
+
+.drawline{animation:draw 1.6s cubic-bezier(.3,.7,.3,1) .4s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.pts{animation:fade .6s ease 1.6s both}
+
+@media (prefers-reduced-motion:reduce){
+  .slide.is-active [data-anim]{animation-duration:.01ms!important;animation-delay:0ms!important}
+  #rail .live{animation:none}
+  .drawline{animation-duration:.01ms}
+  .pts{animation-delay:0ms}
+  .slide{transition-duration:.01ms}
+  .slide.is-active .photo img{animation:none}
+  .slide.is-active .photo::before{animation:none}
+  .glow{animation:none}
+}
+</style>
+
+<div id="viewport">
+<div id="stage">
+
+<!-- ══════════════ 01 · TITLE ══════════════ -->
+<section class="slide bleed is-active" data-topic="BRAC UNIVERSITY · DHAKA">
+  <div class="bleed-img"><img data-anim="zoom" src="{{SCH_HERO}}" alt="The rover Taurus beside the lander mock-up in the Utah desert"></div>
+  <div class="scrim-l"></div><div class="grain"></div>
+  <div style="position:absolute;left:72px;top:74px;right:72px;display:flex;flex-direction:column;gap:22px">
+    <div style="display:flex;align-items:center;gap:22px" data-anim>
+      <img src="{{LOGO_FULL}}" alt="Mongol Tori" style="height:88px;width:auto;display:block">
+      <div style="border-left:1px solid var(--line);padding-left:22px">
+        <p class="bn" style="font-size:26px;color:var(--amber);margin:0;line-height:1.1">মঙ্গল তরী</p>
+        <p class="tiny" style="margin-top:5px">Mars Chariot</p>
+      </div>
+    </div>
+    <h1 data-anim style="--d:1">We built a<br>Mars rover</h1>
+    <hr class="rule" data-anim="grow" style="--d:2;width:460px">
+    <p data-anim style="--d:3;font-size:30px;line-height:1.3;color:var(--ink);max-width:24ch;margin:0">
+      And we were students, exactly like you, when we started.</p>
+    <div style="display:flex;gap:12px;margin-top:6px">
+      <span class="chip" data-anim style="--d:4"><span class="dot"></span>BRAC University · Dhaka</span>
+      <span class="chip" data-anim style="--d:5">7th in the world · 2026</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 02 · THE ASTRONAUT (the hook) ══════════════ -->
+<section class="slide bleed" data-topic="AN ASTRONAUT CAME TO OUR LAB">
+  <!-- logo watermarks sit along the top of this photo, so bias the crop downwards -->
+  <div class="bleed-img"><img data-anim="zoom" src="{{SCH_ASTRO}}" style="object-position:center 92%" alt="An astronaut in a blue NASA flight suit listening to a Mongol-Tori student explain the rover in the lab"></div>
+  <div class="scrim-b"></div><div class="grain"></div>
+  <div style="position:absolute;left:72px;right:72px;bottom:104px">
+    <p class="eyebrow" data-anim>Start here</p>
+    <h2 data-anim style="--d:1;margin-top:16px;font-size:72px">An astronaut<br>came to see us</h2>
+    <p class="lead" data-anim style="--d:2;margin-top:20px;max-width:46ch">A man who has been to space stood in our lab in
+      Dhaka and asked <em>us</em> how our robot works.</p>
+  </div>
+</section>
+
+<!-- ══════════════ 03 · WHO WE ARE ══════════════ -->
+<section class="slide" data-topic="A STUDENT TEAM · SINCE 2015">
+  <div class="cols" style="grid-template-columns:1fr 520px">
+    <div class="stack" style="gap:26px;justify-content:center">
+      <div class="head">
+        <p class="eyebrow" data-anim>01 <span class="dim">/</span> Who we are</p>
+        <h2 data-anim style="--d:1">Nobody handed<br>us a robot</h2>
+      </div>
+      <hr class="rule" data-anim="grow" style="--d:2">
+      <p class="lead" data-anim style="--d:3">In 2015 a few students at BRAC University decided to build a Mars rover.
+        They had no rover, no lab of their own, and no idea how.</p>
+      <p class="body" data-anim style="--d:4">Eleven years later there are six teams inside our team — metal, electronics,
+        code, radios, biology, and the part that makes it drive itself. Every single one of us is a student.</p>
+      <p class="body" data-anim style="--d:5;color:var(--amber);font-size:24px">You do not start with the skill. You start with
+        the curiosity.</p>
+    </div>
+    <div class="stack" style="gap:16px;justify-content:center">
+      <div class="photo" data-anim="fade" style="--d:2;height:400px">
+        <img src="{{SCH_TEAM}}" alt="The Mongol-Tori team holding the Bangladesh flag at the Mars Desert Research Station in Utah">
+        <div class="cap">Our team, Utah, May 2026</div>
+      </div>
+      <p class="tiny" data-anim style="--d:5;text-align:center">Mars Desert Research Station · USA</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 04 · THIS IS NOT MARS ══════════════ -->
+<section class="slide bleed" data-topic="UTAH, USA · THE PLACE THAT LOOKS LIKE MARS">
+  <div class="bleed-img"><img data-anim="zoom" src="{{SCH_DESERT}}" alt="Wide view of the rover and the lander mock-up under an open Utah sky"></div>
+  <div class="scrim-b" style="background:linear-gradient(to top,rgba(12,11,11,.98) 0%,rgba(12,11,11,.9) 30%,rgba(12,11,11,.35) 58%,rgba(12,11,11,0) 82%)"></div>
+  <div class="grain"></div>
+  <div style="position:absolute;left:72px;right:72px;bottom:106px">
+    <h2 data-anim style="font-size:78px">This is not Mars</h2>
+    <p class="lead" data-anim style="--d:1;margin-top:18px;max-width:52ch">It is a desert in Utah, USA — the closest thing to Mars
+      we have on Earth. Every summer, rover teams from all over the world drive here to find out whose machine actually works.</p>
+    <div style="display:flex;gap:12px;margin-top:20px">
+      <span class="chip" data-anim style="--d:2"><span class="dot"></span>116 teams · 18 countries</span>
+      <span class="chip" data-anim style="--d:3">38 made it to the desert</span>
+      <span class="chip" data-anim style="--d:4">We finished 7th</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 05 · WHY MARS IS HARD ══════════════ -->
+<section class="slide" data-topic="WHY A ROBOT, AND NOT A PERSON">
+  <div class="glow" style="width:820px;height:820px;left:-220px;top:-280px"></div>
+  <div class="stack" style="gap:26px;height:100%">
+    <div class="head">
+      <p class="eyebrow" data-anim>02 <span class="dim">/</span> Why robots go first</p>
+      <h2 data-anim style="--d:1">Mars does not want you there</h2>
+    </div>
+    <hr class="rule" data-anim="grow" style="--d:2">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:34px;flex:1;align-content:center">
+      <div class="stat" data-anim="pop" style="--d:3"><span class="n">−60<span class="u">°C</span></span>
+        <span class="l">Average temperature <b>on Mars</b>. Colder than any freezer you have opened.</span></div>
+      <div class="stat" data-anim="pop" style="--d:4"><span class="n">0<span class="u">%</span></span>
+        <span class="l">Oxygen you could breathe. The air is mostly carbon dioxide.</span></div>
+      <div class="stat" data-anim="pop" style="--d:5"><span class="n">20<span class="u">min</span></span>
+        <span class="l">A radio message can take this long to reach Mars. You cannot say "stop!" in time.</span></div>
+      <div class="stat" data-anim="pop" style="--d:6"><span class="n">0</span>
+        <span class="l">Mechanics on Mars. If it breaks there, it stays broken.</span></div>
+    </div>
+    <p class="lead" data-anim style="--d:7;max-width:none;border-top:1px solid var(--line);padding-top:20px">
+      So Mars gets the robots first. Nobody can practise at −60 °C, so we practise in that Utah desert instead — about
+      <em>+35 °C</em> in June — where the dust, the rocks and the distance are real. You can start the same way here.</p>
+  </div>
+</section>
+
+<!-- ══════════════ 06 · MEET TAURUS ══════════════ -->
+<section class="slide" data-topic="MEET TAURUS · THIS YEAR'S ROVER">
+  <div class="stack" style="gap:8px;height:100%">
+    <div class="head">
+      <p class="eyebrow" data-anim>03 <span class="dim">/</span> Meet the machine</p>
+      <h2 data-anim style="--d:1">Taurus</h2>
+    </div>
+    <div style="position:relative;flex:1;margin-top:-6px">
+      <img data-anim="fade" src="{{ROVER_DIAGRAM}}" alt="Line drawing of the rover Taurus: antenna mast, robotic arm, body full of electronics, and four large airless wheels on rocker-bogie suspension"
+           style="--d:2;position:absolute;left:50%;top:47%;transform:translate(-50%,-50%);height:108%;width:auto;opacity:.9">
+      <div class="card" data-anim style="--d:3;position:absolute;left:0;top:6px;width:270px">
+        <span class="k">Ears</span><p class="v">Three radios on one mast. It listens to us from over a kilometre away.</p></div>
+      <div class="card" data-anim style="--d:4;position:absolute;right:0;top:34px;width:270px">
+        <span class="k">Arm</span><p class="v">Seven joints and a gripper. It picks up tools, turns switches, plugs in cables.</p></div>
+      <div class="card" data-anim style="--d:5;position:absolute;left:0;bottom:8px;width:270px">
+        <span class="k">Brain</span><p class="v">A computer inside the body, plus circuit boards we designed ourselves.</p></div>
+      <div class="card" data-anim style="--d:6;position:absolute;right:0;bottom:8px;width:270px">
+        <span class="k">Wheels</span><p class="v">No air inside them — nothing to puncture. The frame bends so all four keep gripping.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 07 · THE FOUR JOBS ══════════════ -->
+<section class="slide bleed" data-topic="FOUR JOBS · 30 MINUTES EACH">
+  <div class="bleed-img"><img data-anim="zoom" src="{{SCH_LANDER}}" alt="The rover working beside the lander mock-up on the Mars yard"></div>
+  <div class="scrim-b" style="background:linear-gradient(to top,rgba(12,11,11,.99) 0%,rgba(12,11,11,.96) 42%,rgba(12,11,11,.6) 60%,rgba(12,11,11,.25) 80%)"></div>
+  <div class="grain"></div>
+  <div style="position:absolute;left:72px;top:52px;right:72px;text-shadow:0 2px 26px rgba(8,7,7,.9)">
+    <p class="eyebrow" data-anim>04 <span class="dim">/</span> What it has to do</p>
+    <h2 data-anim style="--d:1;margin-top:14px">Four jobs. Thirty minutes each.</h2>
+  </div>
+  <div style="position:absolute;left:72px;right:72px;bottom:104px;display:grid;grid-template-columns:repeat(4,1fr);gap:18px">
+    <div class="card" data-anim style="--d:2"><span class="num">01</span><span class="k">Dig</span>
+      <p class="v">Scoop up soil and test it, right there, for any sign that something once lived.</p></div>
+    <div class="card" data-anim style="--d:3"><span class="num">02</span><span class="k">Deliver</span>
+      <p class="v">Find a toolbox, pick it up, carry it across rocks to an astronaut who needs it.</p></div>
+    <div class="card" data-anim style="--d:4"><span class="num">03</span><span class="k">Repair</span>
+      <p class="v">Flip switches, turn valves and plug cables into a broken lander — with a robot hand.</p></div>
+    <div class="card" data-anim style="--d:5"><span class="num">04</span><span class="k">Think</span>
+      <p class="v">Drive to a place on a map and back. Nobody steering. Nobody helping.</p></div>
+  </div>
+</section>
+
+<!-- ══════════════ 08 · THE RULE (interactive torch beam) ══════════════ -->
+<section class="slide bleed" data-topic="THE RULE · THE DRIVER CANNOT SEE THE ROVER">
+  <div class="bleed-img"><img src="{{SCH_ROVER_TALL}}" style="object-position:center 45%" alt="Close view of the rover on the rocky desert floor"></div>
+  <div id="viewhole"></div>
+  <div id="viewring"></div>
+  <div style="position:absolute;left:72px;top:64px;right:72px;z-index:5">
+    <p class="eyebrow" data-anim>05 <span class="dim">/</span> The hardest rule</p>
+    <h2 data-anim style="--d:1;margin-top:14px;max-width:16ch;text-shadow:0 2px 30px rgba(8,7,7,.95)">The driver is not allowed to see the rover</h2>
+  </div>
+  <div style="position:absolute;left:72px;right:72px;bottom:104px;z-index:5">
+    <p class="lead" data-anim style="--d:2;max-width:50ch;text-shadow:0 2px 24px rgba(8,7,7,.95)">Our driver sits in a tent, a
+      kilometre away, with the rover completely out of sight. Everything they know comes through a camera and a radio —
+      this much of the world, and nothing else.</p>
+  </div>
+</section>
+
+<!-- ══════════════ 09 · RADIO ══════════════ -->
+<section class="slide" data-topic="RADIO · THREE LINKS AT ONCE">
+  <div class="cols" style="grid-template-columns:1fr 430px">
+    <div class="stack" style="gap:24px;justify-content:center">
+      <div class="head">
+        <p class="eyebrow" data-anim>06 <span class="dim">/</span> How it hears us</p>
+        <h2 data-anim style="--d:1">Invisible waves,<br>through a hill</h2>
+      </div>
+      <hr class="rule" data-anim="grow" style="--d:2">
+      <p class="lead" data-anim style="--d:3">The same thing that carries radio songs to your house carries our commands to
+        the rover. We run <em>three</em> different radios at the same time.</p>
+      <p class="body" data-anim style="--d:4">Why three? Because one of them will fail on the day. When it does, the other two
+        are already carrying the rover home.</p>
+      <div style="display:flex;gap:44px;margin-top:6px">
+        <div class="stat" data-anim="pop" style="--d:5"><span class="n" style="font-size:64px">1.2<span class="u">km</span></span>
+          <span class="l">The distance we drove it — with hills in the way</span></div>
+        <div class="stat" data-anim="pop" style="--d:6"><span class="n" style="font-size:64px">3</span>
+          <span class="l">Radios live at once, so losing one is survivable</span></div>
+      </div>
+    </div>
+    <div class="stack" style="gap:18px;justify-content:center">
+      <div class="photo" data-anim="fade" style="--d:3;height:340px">
+        <img src="{{SCH_SATEL}}" alt="Two radio modems held up in the lab, one in each hand">
+        <div class="cap">Two of them. One stays with us, one rides the rover.</div>
+      </div>
+      <p class="body" data-anim style="--d:6;font-size:19px;max-width:none">Hold your hand up now — you are standing in radio
+        waves. You just cannot feel them.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 10 · HOW DOES IT KNOW WHERE IT IS ══════════════ -->
+<section class="slide" data-topic="AUTONOMY · KNOWING WHERE YOU ARE">
+  <div class="glow" style="width:760px;height:760px;right:-200px;bottom:-260px"></div>
+  <div class="stack" style="gap:22px;height:100%">
+    <div class="head">
+      <p class="eyebrow" data-anim>07 <span class="dim">/</span> Driving itself</p>
+      <h2 data-anim style="--d:1">Close your eyes and walk to the door</h2>
+    </div>
+    <p class="lead" data-anim style="--d:2;max-width:none;font-size:24px">That is the rover's job — every day, on ground it has
+      never seen. It has four senses, and <em>every one of them lies a little</em>.</p>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;flex:1;align-content:center">
+      <div class="card" data-anim style="--d:3"><span class="k">GPS</span>
+        <p class="v">Knows roughly where you are on Earth — but wanders by a few metres.</p></div>
+      <div class="card" data-anim style="--d:4"><span class="k">Wheels</span>
+        <p class="v">Count how far they turned. On sand they spin without going anywhere.</p></div>
+      <div class="card" data-anim style="--d:5"><span class="k">Balance</span>
+        <p class="v">Feels every turn and bump, like your inner ear. Slowly drifts off.</p></div>
+      <div class="card" data-anim style="--d:6"><span class="k">Eyes</span>
+        <p class="v">Two cameras judging distance. Flat empty sand confuses them.</p></div>
+    </div>
+    <p class="lead" data-anim style="--d:7;max-width:none;border-top:1px solid var(--line);padding-top:18px">
+      So the computer listens to all four, decides who to trust, and draws one map. Four imperfect answers, one good one.
+      That is most of engineering.</p>
+  </div>
+</section>
+
+<!-- ══════════════ 11 · WE MAKE THE PARTS ══════════════ -->
+<section class="slide" data-topic="MAKING PARTS · AND ASKING FOR HELP">
+  <div class="cols" style="grid-template-columns:1fr 440px">
+    <div class="stack" style="gap:24px;justify-content:center">
+      <div class="head">
+        <p class="eyebrow" data-anim>08 <span class="dim">/</span> When you cannot buy it</p>
+        <h2 data-anim style="--d:1">Then you make it.<br>Or you ask.</h2>
+      </div>
+      <hr class="rule" data-anim="grow" style="--d:2">
+      <p class="lead" data-anim style="--d:3">The circuit board that runs the whole rover did not exist, so we designed our own
+        and called it <em>Kacchim</em>. Same with the board that feeds it power.</p>
+      <p class="body" data-anim style="--d:4">The antennas we could buy were not good enough either. So we wrote to an antenna
+        company in Finland and asked. Strangers, 7,000 km away, with no reason to reply.</p>
+      <p class="body" data-anim style="--d:5;color:var(--amber);font-size:24px">They replied. Because the question was a good
+        one. Ask the question — the worst answer is silence.</p>
+    </div>
+    <div class="stack" style="gap:16px;justify-content:center">
+      <div class="photo" data-anim="fade" style="--d:3;height:300px">
+        <img src="{{SCH_COMPLETECH}}" alt="A video call between Mongol-Tori students in Dhaka and an antenna engineer in Finland">
+        <div class="cap">Dhaka ↔ Finland · designing an antenna together</div>
+      </div>
+      <p class="tiny" data-anim style="--d:6;text-align:center">Twenty-three companies now back this team</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 12 · IT BREAKS ══════════════ -->
+<section class="slide" data-topic="FAILURE · THE PART NOBODY POSTS ABOUT">
+  <div class="glow" style="width:900px;height:900px;left:-260px;top:-320px"></div>
+  <div class="stack" style="gap:24px;height:100%;justify-content:center">
+    <p class="eyebrow" data-anim>09 <span class="dim">/</span> The honest slide</p>
+    <h1 data-anim style="--d:1;font-size:96px">It breaks.<br>Constantly.</h1>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:6px">
+      <div class="card" data-anim style="--d:2;border-left:3px solid var(--vermilion)">
+        <span class="k" style="color:var(--ink)">2023 · the circuit burned</span>
+        <p class="v" style="font-size:20px">In a camp in the desert, hours from any shop. The team rebuilt it by hand in
+          <b>four hours</b> and drove the next morning.</p></div>
+      <div class="card" data-anim style="--d:3;border-left:3px solid var(--vermilion)">
+        <span class="k" style="color:var(--ink)">2024 · the body snapped</span>
+        <p class="v" style="font-size:20px">Mid-mission, in front of the judges. Fixed in <b>six hours</b> with only what was
+          in the toolbox.</p></div>
+    </div>
+    <p class="lead" data-anim style="--d:4;max-width:none;font-size:26px;margin-top:8px">Everything we know, we learned from
+      something breaking. If your project fails, you are not bad at this — <em>you are doing it</em>.</p>
+  </div>
+</section>
+
+<!-- ══════════════ 13 · THE SCOREBOARD ══════════════ -->
+<section class="slide" data-topic="EIGHT YEARS OF SCORES · UNIVERSITY ROVER CHALLENGE">
+  <div class="stack" style="gap:14px;height:100%">
+    <div class="head">
+      <p class="eyebrow" data-anim>10 <span class="dim">/</span> Our score, every year</p>
+      <h2 data-anim style="--d:1">Getting better is not a straight line</h2>
+    </div>
+    <div data-anim="fade" style="--d:2;flex:1;display:flex;align-items:center">
+      <svg viewBox="0 0 1140 330" style="width:100%;height:auto" role="img"
+           aria-label="Mongol-Tori's finishing position at the University Rover Challenge: 13th in 2018, 4th in 2021, 16th in 2023, 21st in 2024, 8th in 2025 and 7th in 2026.">
+        <g stroke="rgba(246,241,236,.09)" stroke-width="1">
+          <line x1="112" y1="40" x2="1100" y2="40"/><line x1="112" y1="126" x2="1100" y2="126"/>
+          <line x1="112" y1="222" x2="1100" y2="222"/><line x1="112" y1="270" x2="1100" y2="270"/>
+        </g>
+        <g fill="#8B7F76" font-family="IBM Plex Mono, monospace" font-size="13">
+          <text x="30" y="45">1st</text><text x="30" y="131">10th</text>
+          <text x="30" y="227">20th</text><text x="30" y="275">25th</text>
+        </g>
+        <path d="M120 155 L465 69 L695 184 L810 232 L925 107 L1040 98"
+              fill="none" stroke="#D07E17" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"
+              pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" class="drawline"/>
+        <g class="pts">
+          <circle cx="120"  cy="155" r="7" fill="#D07E17" stroke="#111010" stroke-width="3"/>
+          <circle cx="465"  cy="69"  r="7" fill="#D07E17" stroke="#111010" stroke-width="3"/>
+          <circle cx="695"  cy="184" r="7" fill="#D07E17" stroke="#111010" stroke-width="3"/>
+          <circle cx="810"  cy="232" r="7" fill="#D07E17" stroke="#111010" stroke-width="3"/>
+          <circle cx="925"  cy="107" r="7" fill="#D07E17" stroke="#111010" stroke-width="3"/>
+          <circle cx="1040" cy="98"  r="10" fill="#FC9D2D" stroke="#111010" stroke-width="3"/>
+          <g font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="30" fill="#F6F1EC" text-anchor="middle">
+            <text x="120" y="139">13th</text><text x="465" y="53">4th</text><text x="695" y="168">16th</text>
+            <text x="810" y="216">21st</text><text x="925" y="91">8th</text><text x="1040" y="80">7th</text>
+          </g>
+          <g font-family="IBM Plex Mono, monospace" font-size="13" fill="#8B7F76" text-anchor="middle">
+            <text x="120" y="308">2018</text><text x="465" y="308">2021</text><text x="695" y="308">2023</text>
+            <text x="810" y="308">2024</text><text x="925" y="308">2025</text><text x="1040" y="308">2026</text>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <p class="lead" data-anim style="--d:3;max-width:none;border-top:1px solid var(--line);padding-top:18px">
+      The line goes down as often as it goes up. Behind every dip is a part that failed on the day — and behind every climb
+      is the same team, carrying on. Seventh in the world, out of 116 teams.</p>
+  </div>
+</section>
+
+<!-- ══════════════ 14 · DRONES ══════════════ -->
+<section class="slide" data-topic="DRONES · AND A VISIT FROM THE NAVY">
+  <div class="cols" style="grid-template-columns:520px 1fr">
+    <div class="stack" style="gap:22px;justify-content:center">
+      <div class="head">
+        <p class="eyebrow" data-anim>11 <span class="dim">/</span> Not only rovers</p>
+        <h2 data-anim style="--d:1">We build drones too</h2>
+      </div>
+      <hr class="rule" data-anim="grow" style="--d:2">
+      <p class="lead" data-anim style="--d:3">Ours flies ahead of the rover and looks at the ground it cannot see yet, then
+        radios back what is over the hill.</p>
+      <p class="body" data-anim style="--d:4">Solve one problem properly — knowing where you are — and it works in the air as
+        well as on the ground.</p>
+      <p class="body" data-anim style="--d:5">The Bangladesh Navy came to our lab to see it. Students did the explaining.</p>
+    </div>
+    <div class="photo" data-anim="fade" style="--d:2;height:100%;margin:6px 0 4px">
+      <img src="{{SCH_NAVY}}" alt="Bangladesh Navy officers at the BRAC University lab as students demonstrate the drone">
+      <div class="cap">Our lab, Dhaka · explaining the drone to Navy officers</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 15 · YOUR TURN ══════════════ -->
+<section class="slide" data-topic="OUTREACH · THE CONTROLLER GOES TO YOU">
+  <div class="stack" style="gap:18px;height:100%">
+    <div class="head">
+      <p class="eyebrow" data-anim>12 <span class="dim">/</span> The best part of the job</p>
+      <h2 data-anim style="--d:1">Then we hand over the controller</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;flex:1;align-content:center">
+      <div class="photo" data-anim="fade" style="--d:2;height:330px">
+        <img src="{{SCH_SCHOOL}}" alt="School students in uniform crowding around the rover as a team member explains it">
+        <div class="cap">A school ground, and a rover on it</div>
+      </div>
+      <div class="photo" data-anim="fade" style="--d:3;height:330px">
+        <img src="{{SCH_KIDDRIVE}}" style="object-position:center 35%" alt="A student driving the rover from the control station">
+        <div class="cap">Her turn to drive</div>
+      </div>
+      <div class="photo" data-anim="fade" style="--d:4;height:330px">
+        <img src="{{SCH_KIDRIDE}}" style="object-position:center 30%" alt="A student sitting on the rover while classmates watch and take photos">
+        <div class="cap">Yes — it holds a person</div>
+      </div>
+    </div>
+    <p class="lead" data-anim style="--d:5;max-width:none">Most of us are on this team because someone once let us touch a robot.
+      That is literally the whole reason we came to your school today.</p>
+  </div>
+</section>
+
+<!-- ══════════════ 16 · HOW TO START ══════════════ -->
+<section class="slide" data-topic="HOW TO START · THIS WEEK">
+  <div class="glow" style="width:820px;height:820px;right:-240px;top:-300px"></div>
+  <div class="stack" style="gap:22px;height:100%">
+    <div class="head">
+      <p class="eyebrow" data-anim>13 <span class="dim">/</span> Start this week</p>
+      <h2 data-anim style="--d:1">You do not need a lab. You need five things.</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;flex:1;align-content:center">
+      <div class="card" data-anim style="--d:2"><span class="num">01</span><span class="k">Open something broken</span>
+        <p class="v">A dead torch, an old toy, a fan that stopped. Take it apart. You cannot break what is already broken.</p></div>
+      <div class="card" data-anim style="--d:3"><span class="num">02</span><span class="k">Learn one skill properly</span>
+        <p class="v">Soldering. Or one programming language. One, all the way — not five, halfway.</p></div>
+      <div class="card" data-anim style="--d:4"><span class="num">03</span><span class="k">Make it move</span>
+        <p class="v">A motor, a battery, a switch. The first time something you built moves on its own, you are finished — you are an engineer now.</p></div>
+      <div class="card" data-anim style="--d:5"><span class="num">04</span><span class="k">Find two friends</span>
+        <p class="v">Nobody builds a rover alone. Our team is a hundred people who each know one part very well.</p></div>
+      <div class="card" data-anim style="--d:6"><span class="num">05</span><span class="k">Enter something</span>
+        <p class="v">A school science fair, an olympiad, a robotics contest. A deadline teaches faster than any book.</p></div>
+      <div class="card" data-anim style="--d:7;border-color:rgba(252,157,45,.45)">
+        <span class="num" style="color:var(--amber)">AND</span><span class="k">Ask the question</span>
+        <p class="v">Ask your teacher. Ask us, today, after this. We answer every message we get from a student.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 17 · CLOSE ══════════════ -->
+<section class="slide bleed" data-topic="ধন্যবাদ · THANK YOU">
+  <div class="bleed-img"><img data-anim="zoom" src="{{SCH_YOUNG}}" style="object-position:center 28%" alt="A young student standing with two Mongol-Tori members, holding a small rover"></div>
+  <div class="scrim-l"></div><div class="grain"></div>
+  <div style="position:absolute;left:72px;top:96px;right:72px;display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;align-items:center;gap:14px" data-anim>
+      <img src="{{LOGO_MARK}}" alt="" style="height:36px;width:auto;display:block">
+      <p class="eyebrow"><span class="bn">মঙ্গল তরী</span> <span class="dim">/</span> Mars Chariot</p>
+    </div>
+    <h1 data-anim style="--d:1;font-size:88px">Come and<br>ask us anything</h1>
+    <p class="lead" data-anim style="--d:2;max-width:34ch;font-size:28px">What broke, what it cost, how you join a team, whether
+      we have ever set something on fire. <em>Yes.</em></p>
+    <p class="bn" data-anim style="--d:3;font-size:34px;color:var(--amber);margin:6px 0 0">তুমিও পারবে</p>
+    <div class="stack" data-anim style="--d:4;gap:7px;margin-top:12px">
+      <p class="tiny" style="color:var(--ink-2);font-size:13px">bracu-mongoltori.com</p>
+      <p class="tiny" style="color:var(--ink-2);font-size:13px">youtube.com/@bracumongoltori</p>
+      <p class="tiny" style="color:var(--ink-2);font-size:13px">facebook.com/bracumongoltori</p>
+      <p class="tiny" style="color:var(--amber);font-size:13px;margin-top:6px">BRAC University · Dhaka</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ CHROME ══════════════ -->
+<div id="ticks"></div>
+<div id="rail">
+  <span class="seg"><span class="live"></span><span id="railTopic">BRAC UNIVERSITY</span></span>
+  <span class="sep"></span>
+  <span class="seg">BRACU MONGOL-TORI · SCHOOL TALK</span>
+  <span class="spacer"></span>
+  <span class="seg">MET <span id="met">00:00</span></span>
+  <span class="sep"></span>
+  <span class="seg" id="counter">01 / 17</span>
+</div>
+
+</div><!-- /stage -->
+</div><!-- /viewport -->
+
+<div id="help"><kbd>←</kbd> <kbd>→</kbd> slides · <kbd>N</kbd> notes · <kbd>T</kbd> timer · <kbd>F</kbd> full screen</div>
+
+<div id="notes" aria-live="polite">
+  <div class="nhead"><span class="t" id="nTitle">Slide 1</span><span class="g" id="nTime">0:00</span><span class="g">Press N to hide</span></div>
+  <div class="nbody" id="nBody"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var stage = document.getElementById('stage');
+  var ticks = document.getElementById('ticks');
+  var railTopic = document.getElementById('railTopic');
+  var counter = document.getElementById('counter');
+  var metEl = document.getElementById('met');
+  var help = document.getElementById('help');
+  var notes = document.getElementById('notes');
+  var nTitle = document.getElementById('nTitle');
+  var nTime = document.getElementById('nTime');
+  var nBody = document.getElementById('nBody');
+  var i = 0, total = slides.length;
+
+  var NOTES = {{NOTES}};
+
+  function fit(){
+    var s = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+    stage.style.transform = 'scale(' + s + ')';
+  }
+  window.addEventListener('resize', fit); fit();
+
+  slides.forEach(function(_, n){
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.setAttribute('aria-label', 'Go to slide ' + (n+1));
+    b.addEventListener('click', function(){ go(n); });
+    ticks.appendChild(b);
+  });
+  var tickEls = Array.prototype.slice.call(ticks.children);
+
+  function pad(n){ return (n<10?'0':'') + n; }
+
+  function render(){
+    slides.forEach(function(s, n){ s.classList.toggle('is-active', n === i); });
+    tickEls.forEach(function(t, n){
+      t.classList.toggle('done', n < i);
+      t.classList.toggle('now', n === i);
+    });
+    railTopic.textContent = slides[i].getAttribute('data-topic') || '';
+    counter.textContent = pad(i+1) + ' / ' + pad(total);
+    var d = NOTES[i] || {};
+    nTitle.textContent = pad(i+1) + ' · ' + (d.h || '');
+    nTime.textContent = d.t || '';
+    nBody.innerHTML = d.b || '';
+  }
+
+  function go(n){
+    i = Math.max(0, Math.min(total - 1, n));
+    if (i > 0 && !running) startClock();
+    if (history.replaceState) history.replaceState(null, '', '#' + (i+1));
+    render();
+  }
+  function next(){ go(i+1); }
+  function prev(){ go(i-1); }
+
+  var t0 = 0, running = false;
+  function startClock(){ if(running) return; running = true; t0 = Date.now(); tick(); }
+  function stopClock(){ running = false; }
+  function tick(){
+    if(!running) return;
+    var s = Math.floor((Date.now() - t0)/1000);
+    metEl.textContent = pad(Math.floor(s/60)) + ':' + pad(s%60);
+    metEl.style.color = s > 1080 ? 'var(--vermilion)' : 'var(--amber)';
+    setTimeout(tick, 500);
+  }
+
+  document.addEventListener('keydown', function(e){
+    var k = e.key;
+    if (k === 'ArrowRight' || k === 'PageDown' || k === ' ' || k === 'Enter'){ e.preventDefault(); next(); }
+    else if (k === 'ArrowLeft' || k === 'PageUp' || k === 'Backspace'){ e.preventDefault(); prev(); }
+    else if (k === 'Home'){ e.preventDefault(); go(0); }
+    else if (k === 'End'){ e.preventDefault(); go(total-1); }
+    else if (k === 'n' || k === 'N'){ notes.classList.toggle('open'); }
+    else if (k === 't' || k === 'T'){ running ? stopClock() : (t0 = Date.now(), running = true, tick()); }
+    else if (k === 'r' || k === 'R'){ stopClock(); metEl.textContent = '00:00'; }
+    else if (k === 'f' || k === 'F'){
+      if (document.fullscreenElement) { document.exitFullscreen(); }
+      else if (document.documentElement.requestFullscreen) { document.documentElement.requestFullscreen(); }
+    }
+  });
+
+  /* Slide 8 — the camera beam follows the pointer, so the presenter can hunt for
+     the rover in the dark the way the driver does. Pointer coordinates are divided
+     by the stage scale, because the stage is a fixed 1280x720 canvas. */
+  var hole = document.getElementById('viewhole'), ring = document.getElementById('viewring');
+  if (hole) {
+    var eye = function(x, y){
+      hole.style.setProperty('--mx', x + 'px');
+      hole.style.setProperty('--my', y + 'px');
+      if (ring){ ring.style.left = x + 'px'; ring.style.top = y + 'px'; }
+    };
+    stage.addEventListener('mousemove', function(e){
+      var r = stage.getBoundingClientRect(), s = r.width / 1280 || 1;
+      eye((e.clientX - r.left) / s, (e.clientY - r.top) / s);
+    });
+  }
+
+  setTimeout(function(){ help.classList.add('hide'); }, 6000);
+  document.addEventListener('mousemove', function(){
+    help.classList.remove('hide');
+    clearTimeout(window.__h);
+    window.__h = setTimeout(function(){ help.classList.add('hide'); }, 2500);
+  });
+
+  var start = parseInt((location.hash || '').replace('#',''), 10);
+  if (start >= 1 && start <= total) i = start - 1;
+  render();
+
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){ stage.classList.add('ready'); });
+  });
+})();
+</script>
